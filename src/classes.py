@@ -155,11 +155,42 @@ class HEADER_V2:
         elif(flag == 0):
             self.flag_entropy_not_u =False # 
         h += dh
+        
+
+        ############
+        # flags Type II SN were present
+        flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
+        if(flag == 1):
+            self.flag_RII = True # 
+        elif(flag == 0):
+            self.flag_RII =False # 
+        h += dh
+
+
+        ############
+        # flags Type Ia SN were present
+        flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
+        if(flag == 1):
+            self.flag_RIa= True # 
+        elif(flag == 0):
+            self.flag_RIa=False # 
+        h += dh
+
+        ############
+        # Recall that the words used by C are 8bytes in this case, looking at
+        # gadget2-ali/src/allvars.h (simulated by src/struct-size.c), the size is 208bytes
+        # where there is a 4byte buffer b/c of flag_R1a. This means that h=208. If you 
+        # include the 4byte buffer below, you get the 'correct' value.  HOWEVER 
+        # on the CRC, ~/Lab/phillips/pscratch/me/128/25Mpc/Makefile indicates that
+        # Carbon, Oxygen, Calcium, Chromium, Manganese, Iron). Those flags ONLY work
+        # if h=204 and the below offset is excluded. Why this is the case, I have no friggin' 
+        # idea, other than there must be a bug somewhere.
+        #h += 4
 
         ############
         # Carbon flag
         dh = 1
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Carbon = True # 
         elif(flag == 0):
@@ -168,7 +199,7 @@ class HEADER_V2:
 
         ############
         # Nitrogen flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Nitrogen = True # 
         elif(flag == 0):
@@ -177,7 +208,7 @@ class HEADER_V2:
 
         ############
         # Oxygen flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Oxygen    = True # 
         elif(flag == 0):
@@ -186,7 +217,7 @@ class HEADER_V2:
 
         ############
         # Florine flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Florine       = True # 
         elif(flag == 0):
@@ -195,7 +226,7 @@ class HEADER_V2:
 
         ############
         # Neon flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Neon = True # 
         elif(flag == 0):
@@ -204,7 +235,7 @@ class HEADER_V2:
 
         ############
         # Sodium Flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Sodium = True # 
         elif(flag == 0):
@@ -213,7 +244,7 @@ class HEADER_V2:
 
         ############
         # Magnesium flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Magnesium = True # 
         elif(flag == 0):
@@ -222,7 +253,7 @@ class HEADER_V2:
 
         ############
         # Aluminum flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Aluminum  = True # 
         elif(flag == 0):
@@ -231,7 +262,7 @@ class HEADER_V2:
 
         ############
         # Silicon flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Silicon       = True # 
         elif(flag == 0):
@@ -240,7 +271,7 @@ class HEADER_V2:
 
         ############
         # Phosphorus flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Phosphorus    = True # 
         elif(flag == 0):
@@ -249,7 +280,7 @@ class HEADER_V2:
 
         ############
         # Sulfur flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Sulfur        = True # 
         elif(flag == 0):
@@ -258,7 +289,7 @@ class HEADER_V2:
 
         ############
         # Chlorine flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Chlorine      = True # 
         elif(flag == 0):
@@ -267,7 +298,7 @@ class HEADER_V2:
 
         ############
         # Argon flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Argon         = True # 
         elif(flag == 0):
@@ -276,7 +307,7 @@ class HEADER_V2:
 
         ############
         # Potassium flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Potassium     = True # 
         elif(flag == 0):
@@ -285,7 +316,7 @@ class HEADER_V2:
 
         ############
         # Calcium flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Calcium       = True # 
         elif(flag == 0):
@@ -294,7 +325,7 @@ class HEADER_V2:
 
         ############
         # Scandium flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Scandium      = True # 
         elif(flag == 0):
@@ -303,7 +334,7 @@ class HEADER_V2:
 
         ############
         # Titanium flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Titanium      = True # 
         elif(flag == 0):
@@ -312,7 +343,7 @@ class HEADER_V2:
 
         ############
         # Vanadium flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Vanadium      = True # 
         elif(flag == 0):
@@ -321,7 +352,7 @@ class HEADER_V2:
 
         ############
         # Chromium flag 
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Chromium      = True # 
         elif(flag == 0):
@@ -330,7 +361,7 @@ class HEADER_V2:
 
         ############
         # Manganese flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Manganese     = True # 
         elif(flag == 0):
@@ -339,7 +370,7 @@ class HEADER_V2:
 
         ############
         # Iron flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Iron          = True # 
         elif(flag == 0):
@@ -348,7 +379,7 @@ class HEADER_V2:
 
         ############
         # Cobalt flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Cobalt        = True # 
         elif(flag == 0):
@@ -357,7 +388,7 @@ class HEADER_V2:
 
         ############
         # Nickle flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Nickel        = True # 
         elif(flag == 0):
@@ -366,7 +397,7 @@ class HEADER_V2:
 
         ############
         # Copper flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Copper        = True # 
         elif(flag == 0):
@@ -375,12 +406,13 @@ class HEADER_V2:
 
         ############
         # Zinc flag
-        flag = struct.unpack(edn+'c', Bytes[h:h+dh])[0] # double, redshift
+        flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
             self.flag_Zinc          = True # 
         elif(flag == 0):
             self.flag_Zinc          =False # 
         h += dh
 
-        #char fill[35];               // fills to 256 Bytes
+        #char fill[27];               // fills to 256 Bytes
+        print(vars(self))
 
