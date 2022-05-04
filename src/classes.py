@@ -419,7 +419,8 @@ class HEADER_V2:
 
 
 class PARTICLE:
-    def __init__(self, PosV = np.zeros(3), Mass=None, Type=None, VelV=np.zeros(3)):
+    def __init__(self, PosV = np.zeros(3), Mass=None, Type=None, VelV=np.zeros(3), ID=None,
+                 U=None, Rho=None, Hsml=None, SFR=None):
         """
         ARGS:
             PosL = 
@@ -433,4 +434,72 @@ class PARTICLE:
         self.posV = PosV
         self.mass = Mass
         self.type = Type
-        self.velV = VelV
+        self.vV   = VelV
+        self.id   = ID
+        self.u    = U
+        self.rho  = Rho
+        self.hsml = Hsml
+        self.sfr  = SFR
+        self.u    = VelV
+        self.age  = -1
+        self.Cf   = -1
+        self.Nf   = -1
+        self.Of   = -1
+        self.Ff   = -1
+        self.Nef  = -1
+        self.Naf  = -1
+        self.Maf  = -1
+        self.Alf  = -1
+        self.Sif  = -1
+        self.Pf   = -1
+        self.Sf   = -1
+        self.Clf  = -1
+        self.Arf  = -1
+        self.Kf   = -1
+        self.Caf  = -1
+        self.Scf  = -1
+        self.Tif  = -1
+        self.Vf   = -1
+        self.Crf  = -1
+        self.Mnf  = -1
+        self.Fef  = -1
+        self.Cof  = -1
+        self.Nif  = -1
+        self.Cuf  = -1
+        self.Znf  = -1
+
+
+
+def read_metal(PL = None, Header=None, Metal=None, Short=None, FloatSize=4, Fin=None,
+               Endien="<"):
+    """
+    ARGS:
+        PL = Particle List
+        Header = header
+        Metal  = (str) full name of metal to read
+        Short  = (str) short (IUPAC) name of metal to read
+        Fin    = Input file (already opened)
+        Endien = string, '<' == little, '>' == big
+    DESCRIPTION:
+        Generalizes a very repetitive chunk of my code
+    RETURN:
+    DEBUG:
+    FUTURE:
+    """
+    edn = Endien
+    if(getattr(Header, "flag_" + Metal) == True):
+        print("Reading {} Mass Frac".format(Metal))
+        buf    = Fin.read(4)        # buffer
+        # Gas 
+        for i in range(Header.npartV[0]):
+            bytes = Fin.read(FloatSize)
+            frac  = struct.unpack(edn+"f", bytes)[0]
+            setattr(PL[i], Short, frac)
+
+        # Stars
+        offset = Header.npartV[0] + Header.npartV[1] + Header.npartV[2] + Header.npartV[3]
+        for i in range(Header.npartV[4]):
+            bytes = Fin.read(FloatSize)
+            frac  = struct.unpack(edn+"f", bytes)[0]
+            setattr(PL[offset + i], Short, frac)
+        buf    = Fin.read(4)        # buffer
