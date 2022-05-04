@@ -416,3 +416,21 @@ class HEADER_V2:
         #char fill[27];               // fills to 256 Bytes
         print(vars(self))
 
+
+
+class PARTICLE:
+    def __init__(self, PosV = np.zeros(3), Mass=None, Type=None, VelV=np.zeros(3)):
+        """
+        ARGS:
+            PosL = 
+            Mass = 
+        DESCRIPTION:
+        RETURN:
+        DEBUG:
+        FUTURE:
+            1. Make this less ugly
+        """
+        self.posV = PosV
+        self.mass = Mass
+        self.type = Type
+        self.velV = VelV
