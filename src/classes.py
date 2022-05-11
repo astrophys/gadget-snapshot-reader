@@ -420,7 +420,7 @@ class HEADER_V2:
 
 class PARTICLE:
     def __init__(self, PosV = np.zeros(3), Mass=None, Type=None, VelV=np.zeros(3), ID=None,
-                 U=None, Rho=None, Hsml=None, SFR=None):
+                 U=None, Rho=None, Hsml=None):
         """
         ARGS:
             PosL = 
@@ -439,7 +439,8 @@ class PARTICLE:
         self.u    = U
         self.rho  = Rho
         self.hsml = Hsml
-        self.sfr  = SFR
+        self.rII  = -1
+        self.rIa  = -1
         self.u    = VelV
         self.age  = -1
         self.Cf   = -1

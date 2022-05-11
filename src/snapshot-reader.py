@@ -216,26 +216,39 @@ def main():
             pL[i].hsml = hsml
         buf    = fin.read(4)        # buffer
             
+
+        ##### I think I'm missing chunks for TypeIa_SFR and TypeII_SFR, should be for star particles NOT gas.
     
-        ########### SFR ###########
-        if(header.flag_sfr == True):
+        ########### Type II SN Rate ###########
+        if(header.flag_RII == True):
             buf    = fin.read(4)        # buffer
-            for i in range(header.npartV[0]):
+            offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
+            for i in range(header.npartV[4]):
                 bytes = fin.read(floatSize)
-                sfr   = struct.unpack(edn+"f", bytes)[0]
-                pL[i].sfr = sfr
+                rII   = struct.unpack(edn+"f", bytes)[0]
+                pL[offset + i].rII = rII
+            buf    = fin.read(4)        # buffer
+            
+        ########### Type Ia SN Rate ###########
+        if(header.flag_RIa == True):
+            buf    = fin.read(4)        # buffer
+            offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
+            for i in range(header.npartV[4]):
+                bytes = fin.read(floatSize)
+                rIa   = struct.unpack(edn+"f", bytes)[0]
+                pL[offset + i].rIa = rIa
             buf    = fin.read(4)        # buffer
             
 
-            ########### Stellar age ###########
-            if(header.flag_stellarage == True):
-                buf    = fin.read(4)        # buffer
-                offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
-                for i in range(header.npartV[4]):
-                    bytes = fin.read(floatSize)
-                    age   = struct.unpack(edn+"f", bytes)[0]
-                    pL[offset + i].age = age
-                buf    = fin.read(4)        # buffer
+        ########### Stellar age ###########
+        if(header.flag_sfr == True and header.flag_stellarage == True):
+            buf    = fin.read(4)        # buffer
+            offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
+            for i in range(header.npartV[4]):
+                bytes = fin.read(floatSize)
+                age   = struct.unpack(edn+"f", bytes)[0]
+                pL[offset + i].age = age
+            buf    = fin.read(4)        # buffer
             
     
     ########### Metals Fraction ###########
@@ -336,6 +349,14 @@ def main():
         else:
             exit_with_error("ERROR!!! 'flag_metals' enabled but no gas or stars present!")
     
+    ###### Ensure that all the data is read and that the EOF has been reached ######
+    #   https://stackoverflow.com/a/53792531/4021436
+    curPos = fin.tell()
+    eof    = fin.seek(0,2)
+    lastByte = fin.read(1)
+    if(curPos - eof != 0 or len(lastByte) != 0):
+        exit_with_error("ERROR!!! EOF ({}) not reached! Current Position = {}, lastByte = {}".
+                        format(eof,curPos, lastByte))
     
     
     print("\n\nEnded : %s"%(time.strftime("%D:%H:%M:%S")))
