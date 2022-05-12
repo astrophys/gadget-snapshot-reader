@@ -31,6 +31,7 @@ class HEADER_V2:
             Endian = "big"
         else:
             exit_with_error("ERROR!!! Incorrect option ({}) for Endianess".format(Endian))
+        self.endian = Endian
 
         ############
         # Number of Particles - [Gas, DM, X, Star, X, X]
@@ -414,7 +415,146 @@ class HEADER_V2:
         h += dh
 
         #char fill[27];               // fills to 256 Bytes
-        print(vars(self))
+        #print(vars(self))
+
+
+    def print(self):
+        """
+        ARGS:
+        DESCRIPTION:
+            This pretty print of the header
+        RETURN:
+        DEBUG:
+        FUTURE:
+        """
+        # Endian
+        print("{:>22} : {}".format("Endian", self.endian))
+
+        # Number of Particles
+        print("{:>22} : ".format("Particles"))
+        print("{:>22}   {} gas".format("", self.npartV[0]))
+        print("{:>22}   {} dm".format("", self.npartV[1]))
+        print("{:>22}   {} ".format("", self.npartV[2]))
+        print("{:>22}   {} ".format("", self.npartV[3]))
+        print("{:>22}   {} stars".format("", self.npartV[4]))
+        print("{:>22}   {} ".format("", self.npartV[5]))
+
+
+        # Mass
+        print("{:>22} : ".format("Mass (10^10 M_sun)"))
+        print("{:>22}   {} gas".format("", self.massV[0]))
+        print("{:>22}   {} dm".format("", self.massV[1]))
+        print("{:>22}   {} ".format("", self.massV[2]))
+        print("{:>22}   {} ".format("", self.massV[3]))
+        print("{:>22}   {} ".format("", self.massV[4]))
+        print("{:>22}   {} ".format("", self.massV[5]))
+
+        # Scale factor - a
+        print("{:>22} : {}".format("a", self.time))
+        
+        # Redshift - z
+        print("{:>22} : {}".format("redshift", self.z))
+
+        # Star formation flags
+        print("{:>22} : {}".format("flag_sfr", self.flag_sfr))
+        print("{:>22} : {}".format("flag_feed", self.flag_feed))
+
+        # Total number of particles 
+        print("{:>22} : {} ".format("npartTotal", self.npartTotal))
+
+        # Cooling
+        print("{:>22} : {} ".format("cooling", self.flag_cooling))
+
+        # Number of files in multi-file snapshot
+        print("{:>22} : {} ".format("N files/snap", self.num_files))
+
+        # Box-size
+        print("{:>22} : {} ".format("Box-size", self.BoxSize))
+
+        # Cosmological Parameters
+        print("{:>22} : {} ".format("Omega0", self.Omega0))
+        print("{:>22} : {} ".format("OmegaLambda", self.OmegaLambda))
+        print("{:>22} : {} ".format("HubbleParam", self.HubbleParam))
+
+        # Stellar Age
+        print("{:>22} : {} ".format("StellarAge", self.flag_stellarage))
+
+        # Metals
+        print("{:>22} : {} ".format("flag_metals", self.flag_metals))
+
+        # High word of the total number of particles of each type
+        print("{:>22} : ".format("Total High Word"))
+        print("{:>22} : {} gas".format("", self.npartTotalHighWord[0]))
+        print("{:>22} : {} dm".format("", self.npartTotalHighWord[1]))
+        print("{:>22} : {} ".format("", self.npartTotalHighWord[2]))
+        print("{:>22} : {} ".format("", self.npartTotalHighWord[3]))
+        print("{:>22} : {} ".format("", self.npartTotalHighWord[4]))
+        print("{:>22} : {} ".format("", self.npartTotalHighWord[5]))
+
+        # flags that IC-file contains entropy instead of U
+        print("{:>22} : {} ".format("", self.flag_entropy_not_u))
+            
+        # Type II SN
+        print("{:>22} : {} ".format("Type II SNR", self.flag_RII))
+
+        # Type Ia SN
+        print("{:>22} : {} ".format("Type Ia SNR", self.flag_RIa))
+
+        # Metals
+        if(self.flag_Carbon):
+            print("{:>22} : {} ".format("flag_Carbon", self.flag_Carbon))
+        if(self.flag_Nitrogen):
+            print("{:>22} : {} ".format("flag_Nitrogen", self.flag_Nitrogen))
+        if(self.flag_Oxygen):
+            print("{:>22} : {} ".format("flag_Oxygen", self.flag_Oxygen))
+        if(self.flag_Florine):
+            print("{:>22} : {} ".format("flag_Florine", self.flag_Florine))
+        if(self.flag_Neon):
+            print("{:>22} : {} ".format("flag_Neon", self.flag_Neon))
+        if(self.flag_Sodium):
+            print("{:>22} : {} ".format("flag_Sodium", self.flag_Sodium))
+        if(self.flag_Magnesium):
+            print("{:>22} : {} ".format("flag_Magnesium", self.flag_Magnesium))
+        if(self.flag_Aluminum):
+            print("{:>22} : {} ".format("flag_Aluminum", self.flag_Aluminum))
+        if(self.flag_Silicon):
+            print("{:>22} : {} ".format("flag_Silicon", self.flag_Silicon))
+        if(self.flag_Phosphorus):
+            print("{:>22} : {} ".format("flag_Phosphorus", self.flag_Phosphorus))
+        if(self.flag_Sulfur):
+            print("{:>22} : {} ".format("flag_Sulfur", self.flag_Sulfur))
+        if(self.flag_Chlorine):
+            print("{:>22} : {} ".format("flag_Chlorine", self.flag_Chlorine))
+        if(self.flag_Argon):
+            print("{:>22} : {} ".format("flag_Argon", self.flag_Argon))
+        if(self.flag_Potassium):
+            print("{:>22} : {} ".format("flag_Potassium", self.flag_Potassium))
+        if(self.flag_Calcium):
+            print("{:>22} : {} ".format("flag_Calcium", self.flag_Calcium))
+        if(self.flag_Scandium):
+            print("{:>22} : {} ".format("flag_Scandium", self.flag_Scandium))
+        if(self.flag_Titanium):
+            print("{:>22} : {} ".format("flag_Titanium", self.flag_Titanium))
+        if(self.flag_Vanadium):
+            print("{:>22} : {} ".format("flag_Vanadium", self.flag_Vanadium))
+        if(self.flag_Chromium):
+            print("{:>22} : {} ".format("flag_Chromium", self.flag_Chromium))
+        if(self.flag_Manganese):
+            print("{:>22} : {} ".format("flag_Manganese", self.flag_Manganese))
+        if(self.flag_Iron):
+            print("{:>22} : {} ".format("flag_Iron", self.flag_Iron))
+        if(self.flag_Cobalt):
+            print("{:>22} : {} ".format("flag_Cobalt", self.flag_Cobalt))
+        if(self.flag_Nickel):
+            print("{:>22} : {} ".format("flag_Nickel", self.flag_Nickel))
+        if(self.flag_Copper):
+            print("{:>22} : {} ".format("flag_Copper", self.flag_Copper))
+        if(self.flag_Zinc):
+            print("{:>22} : {} ".format("flag_Zinc", self.flag_Zinc))
+
+
+
+
 
 
 

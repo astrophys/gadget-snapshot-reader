@@ -21,6 +21,7 @@ from classes import HEADER_V2
 from classes import PARTICLE
 from classes import read_metal
 import struct
+import numpy as np
 
 
 def print_help(Arg):
@@ -101,6 +102,7 @@ def main():
 
     ########### Header ###########
     header = HEADER_V2(Bytes=headB, Endian="little")
+    header.print()
     ngas   = header.npartV[0]
     ndm    = header.npartV[1]
     nstar  = header.npartV[4]
