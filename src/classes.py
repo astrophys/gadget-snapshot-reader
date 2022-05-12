@@ -427,6 +427,9 @@ class HEADER_V2:
         DEBUG:
         FUTURE:
         """
+        print("###########################################################################")
+        print("############################ Snapshot Header ##############################")
+        print("###########################################################################")
         # Endian
         print("{:>22} : {}".format("Endian", self.endian))
 
@@ -449,38 +452,11 @@ class HEADER_V2:
         print("{:>22}   {} ".format("", self.massV[4]))
         print("{:>22}   {} ".format("", self.massV[5]))
 
-        # Scale factor - a
-        print("{:>22} : {}".format("a", self.time))
-        
-        # Redshift - z
-        print("{:>22} : {}".format("redshift", self.z))
-
-        # Star formation flags
-        print("{:>22} : {}".format("flag_sfr", self.flag_sfr))
-        print("{:>22} : {}".format("flag_feed", self.flag_feed))
-
         # Total number of particles 
         print("{:>22} : {} ".format("npartTotal", self.npartTotal))
 
-        # Cooling
-        print("{:>22} : {} ".format("cooling", self.flag_cooling))
-
         # Number of files in multi-file snapshot
         print("{:>22} : {} ".format("N files/snap", self.num_files))
-
-        # Box-size
-        print("{:>22} : {} ".format("Box-size", self.BoxSize))
-
-        # Cosmological Parameters
-        print("{:>22} : {} ".format("Omega0", self.Omega0))
-        print("{:>22} : {} ".format("OmegaLambda", self.OmegaLambda))
-        print("{:>22} : {} ".format("HubbleParam", self.HubbleParam))
-
-        # Stellar Age
-        print("{:>22} : {} ".format("StellarAge", self.flag_stellarage))
-
-        # Metals
-        print("{:>22} : {} ".format("flag_metals", self.flag_metals))
 
         # High word of the total number of particles of each type
         print("{:>22} : ".format("Total High Word"))
@@ -494,6 +470,31 @@ class HEADER_V2:
         # flags that IC-file contains entropy instead of U
         print("{:>22} : {} ".format("", self.flag_entropy_not_u))
             
+        # Cosmological Parameters
+        print("\n\n############ Cosmological Parameters ############")
+        print("{:>22} : {} ".format("Omega0", self.Omega0))
+        print("{:>22} : {} ".format("OmegaLambda", self.OmegaLambda))
+        print("{:>22} : {} ".format("HubbleParam", self.HubbleParam))
+        # Scale factor - a
+        print("{:>22} : {}".format("a", self.time))
+        # Redshift - z
+        print("{:>22} : {}".format("redshift", self.z))
+        # Box-size
+        print("{:>22} : {} Mpc/h".format("Box-size", self.BoxSize))
+
+        print("\n\n############ Feedback Parameters ############")
+        # Cooling
+        print("{:>22} : {} ".format("cooling", self.flag_cooling))
+        # Star formation flags
+        print("{:>22} : {}".format("flag_sfr", self.flag_sfr))
+        print("{:>22} : {}".format("flag_feed", self.flag_feed))
+
+        # Stellar Age
+        print("{:>22} : {} ".format("StellarAge", self.flag_stellarage))
+
+        # Metals
+        print("{:>22} : {} \n".format("flag_metals", self.flag_metals))
+
         # Type II SN
         print("{:>22} : {} ".format("Type II SNR", self.flag_RII))
 
