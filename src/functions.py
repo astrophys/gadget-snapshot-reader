@@ -17,10 +17,10 @@ from classes import PARTICLE
 from classes import read_metal
 
 
-def read_gadget2_snapshot(File=None, Endian="little"):
+def read_gadget2_snapshot(Path=None, Endian="little"):
     """
     ARGS:
-        File   : file object opened in calling function
+        Path   : (str) path to snapshot file 
         Endian : (str) endianness
     DESCRIPTION:
         This function reads a snapshot file that was created by gadget2-ali, which 
@@ -32,7 +32,7 @@ def read_gadget2_snapshot(File=None, Endian="little"):
     floatSize = 4
     intSize   = 4
     edn = Endian
-    fin    = File
+    fin = open(Path, "rb")
     buf    = fin.read(4)        # buffer
     headB  = fin.read(256)
     buf    = fin.read(4)        # buffer
@@ -52,7 +52,8 @@ def read_gadget2_snapshot(File=None, Endian="little"):
     # Ugly to do in python, oh well
     pL     = []                 # List of particles
     for i in range(npart):
-        pL.append(PARTICLE())
+        p = PARTICLE(Mass=0)    ### ERROR HERE!!! Seems to just be creating pointers to the same object
+        pL.append(p)
 
 
     ########### Mass ###########
@@ -76,6 +77,7 @@ def read_gadget2_snapshot(File=None, Endian="little"):
             pL[i].posV[0] = x
             pL[i].posV[1] = y
             pL[i].posV[2] = z
+            #print(pL[0].posV[0], i)
             i += 1
     buf    = fin.read(4)        # buffer
 
@@ -287,4 +289,17 @@ def read_gadget2_snapshot(File=None, Endian="little"):
                 read_metal(PL=pL, Header=header, Metal="Nickel", Short="Nif", Fin=fin)
         else:
             exit_with_error("ERROR!!! 'flag_metals' enabled but no gas or stars present!")
-    return(pL)
+
+
+    ###### Ensure that all the data is read and that the EOF has been reached ######
+    #   https://stackoverflow.com/a/53792531/4021436
+    curPos = fin.tell()
+    eof    = fin.seek(0,2)
+    lastByte = fin.read(1)
+    if(curPos - eof != 0 or len(lastByte) != 0):
+        exit_with_error("ERROR!!! EOF ({}) not reached! Current Position = {}, lastByte = {}".
+                        format(eof,curPos, lastByte))
+    fin.close()
+
+
+    return(pL, header)

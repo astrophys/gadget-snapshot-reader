@@ -17,6 +17,8 @@ import subprocess
 import numpy as np
 import grp
 import getpass
+import matplotlib
+import matplotlib.pyplot as plt
 
 from error import exit_with_error
 from functions import read_gadget2_snapshot
@@ -75,17 +77,43 @@ def main():
 
 
     startTime = time.time()
-    fin = open(path, "rb")
-    pL = read_gadget2_snapshot(File=fin, Endian=edn)
-    ###### Ensure that all the data is read and that the EOF has been reached ######
-    #   https://stackoverflow.com/a/53792531/4021436
-    curPos = fin.tell()
-    eof    = fin.seek(0,2)
-    lastByte = fin.read(1)
-    if(curPos - eof != 0 or len(lastByte) != 0):
-        exit_with_error("ERROR!!! EOF ({}) not reached! Current Position = {}, lastByte = {}".
-                        format(eof,curPos, lastByte))
-    fin.close()
+    (pL, header) = read_gadget2_snapshot(Path=path, Endian=edn)
+
+
+    ###### Let's try to plot the mass density ######
+    array = np.zeros([100,100],dtype=np.float64)
+    # gas, dm and stars 
+    for k in range(len(pL)):
+        # Check logic here
+        i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
+        j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
+        #print(i,j)
+        array[i,j] += pL[k].mass
+    
+    array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
+                     header.npartV[3] + header.npartV[4] + header.npartV[5])
+    array = np.log(array)
+    fig, ax = plt.subplots()
+    im = ax.imshow(array)
+    plt.show()
+    
+    ###### Let's try to plot the Carbon mass Frac######
+    array = np.zeros([100,100],dtype=np.float64)
+    # gas, dm and stars 
+    for k in range(len(pL)):
+        if(pL[k].type == 0 or pL[k].type ==4):
+            # Check logic here
+            i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
+            j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
+            #print(i,j)
+            array[i,j] += pL[k].Cf
+    
+    array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
+                     header.npartV[3] + header.npartV[4] + header.npartV[5])
+    array = np.log(array)
+    fig, ax = plt.subplots()
+    im = ax.imshow(array)
+    plt.show()
     
     
     print("\n\nEnded : %s"%(time.strftime("%D:%H:%M:%S")))

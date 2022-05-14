@@ -104,7 +104,7 @@ class HEADER_V2:
         ############
         # Box-size of simulation
         dh = 8
-        self.BoxSize    = struct.unpack(edn+'d', Bytes[h:h+dh])[0]             # double
+        self.boxSize    = struct.unpack(edn+'d', Bytes[h:h+dh])[0]             # double
         h += dh
 
         ############
@@ -480,7 +480,7 @@ class HEADER_V2:
         # Redshift - z
         print("{:>22} : {}".format("redshift", self.z))
         # Box-size
-        print("{:>22} : {} Mpc/h".format("Box-size", self.BoxSize))
+        print("{:>22} : {} Mpc/h".format("Box-size", self.boxSize))
 
         print("\n\n############ Feedback Parameters ############")
         # Cooling
@@ -560,7 +560,7 @@ class HEADER_V2:
 
 
 class PARTICLE:
-    def __init__(self, PosV = np.zeros(3), Mass=None, Type=None, VelV=np.zeros(3), ID=None,
+    def __init__(self, PosV=None, Mass=None, Type=None, VelV=None, ID=None,
                  U=None, Rho=None, Hsml=None):
         """
         ARGS:
@@ -572,10 +572,16 @@ class PARTICLE:
         FUTURE:
             1. Make this less ugly
         """
-        self.posV = PosV
+        if(PosV is None):
+            self.posV = np.zeros(3)
+        else:
+            self.posV = PosV
         self.mass = Mass
         self.type = Type
-        self.vV   = VelV
+        if(VelV is None):
+            self.vV = np.zeros(3)
+        else:
+            self.vV = VelV
         self.id   = ID
         self.u    = U
         self.rho  = Rho
