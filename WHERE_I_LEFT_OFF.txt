@@ -1,0 +1,22 @@
+1. Look into arielle's machine /Users/ali/Research/code/mnc2file_sph to see if my headers match
+#. These files match (md5 = 854c4a38b3a70ca41dc7022bade600d0) : 
+    a) phillips : ~/Research/data/GADGET_Data/cstar0.015/128/25Mpc/lcdm/snapshot_016/snapshot_016
+    #) crc      : ~/Lab/phillips/pscratch/asnedden/128/25Mpc/lcdm/snapshot_016
+    #) It appears these were read by mnc2file_gas
+        #. Use mnc2file_gas.txt and mnc2file_star.txt to compare against.
+#. Found smaller files that I can used on phillip's machine
+    a) ~/Research/GADGET/Gadget_ali/lcdm_16/
+        #. 10mpc, 16**3, Carbon, Oxygen
+    #) ~/Research/GADGET/Gadget_ali/lcdm_64_feed
+        #. 20mpc, 64**3, CARBON, OXYGEN, CALCIUM, CHROMIUM, MANGANESE, IRON
+#. gadget2csv notes
+    a) Evidently Jared was assigned to write gadget2csv on March 2014
+    #) May 10, 2014, did correct io.c for R_Ia and R_II
+#. Add error checking with flags for sfr and typeII and typeIa SN
+#. Add pretty printing for particle class.
+#. Checked old compter mbp, no newer version 
+#. Add diagnostic printing
+#. Follow my current Python convention, e.g. flag_Carbon -> flagC
+#. Move the header reading to functions.py
+#. Create a function to print out the relative metallicities to compare with
+   snapshot_016/mnc2file_gas.txt
