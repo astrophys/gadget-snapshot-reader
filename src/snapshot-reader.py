@@ -52,6 +52,22 @@ def main():
     DESCRIPTION:
     RETURN:
     DEBUG:
+        1. Compared output to gadget2/128part-25mpc/snapshot_016/mnc2file_gas.txt
+            a) Looked at mnc2file_sph code to figure out how the values were computed in 
+               mnc2file_gas.txt
+            #) Comparison : 
+                > aa=(-header.npartV[4]-header.npartV[1]-4); np.log10(pL[aa].Cf /
+                    (pL[aa].mass * 2.45E-04 * 12.011 / 1.336294e+00)) : 
+                -2.3081247000154947
+                $ grep "2.67651" data/gadget2/128part-25mpc/snapshot_016/mnc2file_gas.txt |
+                grep 4.7546 | awk '{print $6}'
+                -2.308125
+            #) IDENTICAL! I have high confidence here in the values b/c I randomly checked
+                          portions of the mnc2file_gas.txt. 
+            #) NOTE : I had to use grep above b/c the entries are jumbled due to the fact
+                      is an MPI code
+            #) See p325 (10/1/14) of Daily 2014 Notes for discussion of how to compute the
+               relative solar metallicity
     FUTURE:
     """
     ### Python 3 required
