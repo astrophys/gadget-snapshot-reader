@@ -590,32 +590,72 @@ class PARTICLE:
         self.rIa  = -1
         self.u    = VelV
         self.age  = -1
-        self.Cf   = -1
-        self.Nf   = -1
-        self.Of   = -1
-        self.Ff   = -1
-        self.Nef  = -1
-        self.Naf  = -1
-        self.Maf  = -1
-        self.Alf  = -1
-        self.Sif  = -1
-        self.Pf   = -1
-        self.Sf   = -1
-        self.Clf  = -1
-        self.Arf  = -1
-        self.Kf   = -1
-        self.Caf  = -1
-        self.Scf  = -1
-        self.Tif  = -1
-        self.Vf   = -1
-        self.Crf  = -1
-        self.Mnf  = -1
-        self.Fef  = -1
-        self.Cof  = -1
-        self.Nif  = -1
-        self.Cuf  = -1
-        self.Znf  = -1
+        # These are masses, e.g. self.C is the mass of carbon in the part
+        self.C   = -1   
+        self.N   = -1
+        self.O   = -1
+        self.F   = -1
+        self.Ne  = -1
+        self.Na  = -1
+        self.Ma  = -1
+        self.Al  = -1
+        self.Si  = -1
+        self.P   = -1
+        self.S   = -1
+        self.Cl  = -1
+        self.Ar  = -1
+        self.K   = -1
+        self.Ca  = -1
+        self.Sc  = -1
+        self.Ti  = -1
+        self.V   = -1
+        self.Cr  = -1
+        self.Mn  = -1
+        self.Fe  = -1
+        self.Co  = -1
+        self.Ni  = -1
+        self.Cu  = -1
+        self.Zn  = -1
+        # Recall that metallicity is defined as log10[n_zi / n_H] STOPPED HERE!!
+        self.C   = -1   
+        self.N   = -1
+        self.O   = -1
+        self.F   = -1
+        self.Ne  = -1
+        self.Na  = -1
+        self.Ma  = -1
+        self.Al  = -1
+        self.Si  = -1
+        self.P   = -1
+        self.S   = -1
+        self.Cl  = -1
+        self.Ar  = -1
+        self.K   = -1
+        self.Ca  = -1
+        self.Sc  = -1
+        self.Ti  = -1
+        self.V   = -1
+        self.Cr  = -1
+        self.Mn  = -1
+        self.Fe  = -1
+        self.Co  = -1
+        self.Ni  = -1
+        self.Cu  = -1
+        self.Zn  = -1
 
+
+class ELEMENT:
+    def __init__(self, AtomMass=None, SolarMetalNormConstant=1.3765e-02):
+        """
+        ARGS:
+            PosL = 
+            Mass = 
+        DESCRIPTION:
+        RETURN:
+        DEBUG:
+        FUTURE:
+            1. Make this less ugly
+        """
 
 
 def read_metal(PL = None, Header=None, Metal=None, Short=None, FloatSize=4, Fin=None,
@@ -641,13 +681,13 @@ def read_metal(PL = None, Header=None, Metal=None, Short=None, FloatSize=4, Fin=
         # Gas 
         for i in range(Header.npartV[0]):
             bytes = Fin.read(FloatSize)
-            frac  = struct.unpack(edn+"f", bytes)[0]
-            setattr(PL[i], Short, frac)
+            mass  = struct.unpack(edn+"f", bytes)[0]
+            setattr(PL[i], Short, mass)
 
         # Stars
         offset = Header.npartV[0] + Header.npartV[1] + Header.npartV[2] + Header.npartV[3]
         for i in range(Header.npartV[4]):
             bytes = Fin.read(FloatSize)
-            frac  = struct.unpack(edn+"f", bytes)[0]
-            setattr(PL[offset + i], Short, frac)
+            mass  = struct.unpack(edn+"f", bytes)[0]
+            setattr(PL[offset + i], Short, mass)
         buf    = Fin.read(4)        # buffer

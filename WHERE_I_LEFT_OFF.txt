@@ -17,6 +17,6 @@
 #. Checked old compter mbp, no newer version 
 #. Add diagnostic printing
 #. Follow my current Python convention, e.g. flag_Carbon -> flagC
-#. Move the header reading to functions.py
 #. Create a function to print out the relative metallicities to compare with
    snapshot_016/mnc2file_gas.txt
+#. Put classes.py:read_metal() in functions.py
