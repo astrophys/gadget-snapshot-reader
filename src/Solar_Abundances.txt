@@ -1,0 +1,60 @@
+#     (Atomic Mass)	  (n_i/n_H)_solar		(Mass * n_i/n_H)
+H             1.008                 1	             1.008	          
+He           4.0026	           0.0789	        3.1581E-01	
+Li             6.94	         2.04E-09	        1.4158E-08	
+Be           9.0122	         2.63E-11	        2.3702E-10	
+B	            10.81	         6.17E-10	        6.6698E-09	
+C	           12.011	         2.45E-04	        2.9427E-03	
+N	           14.007	         8.51E-05	        1.1920E-03	
+O	           15.999	          0.00049	        7.8395E-03	
+F	           18.998	         3.02E-08	        5.7374E-07	
+Ne            20.18	         1.00E-04	        2.0180E-03	
+Na            22.99	         2.14E-06	        4.9199E-05	
+Mg           24.305	         3.47E-05	        8.4338E-04	
+Al           26.982	         2.95E-06	        7.9597E-05	
+Si           28.085	         3.47E-05	        9.7455E-04	
+P	           30.974	         3.20E-07	        9.9117E-06	
+S	            32.06	         1.84E-05         5.8990E-04	
+Cl            35.45	         1.91E-07	        6.7710E-06	
+Ar           39.948	         2.51E-06	        1.0027E-04	
+K	           39.098	         1.32E-07	        5.1609E-06	
+Ca           40.078	         2.29E-06	        9.1779E-05	
+Sc           44.956	         1.48E-09	        6.6535E-08	
+Ti           47.867	         1.05E-07	        5.0260E-06	
+V	           50.942	         1.00E-08	        5.0942E-07	
+Cr           51.996	         4.68E-07	        2.4334E-05	
+Mn           54.938	         2.88E-07	        1.5822E-05	
+Fe           55.845	         2.82E-05	        1.5748E-03	
+Co           58.933	         8.32E-08	        4.9032E-06	
+Ni           58.693	         1.78E-06	        1.0447E-04	
+Cu           63.546	         1.62E-08         1.0294E-06	
+Zn            65.38	         3.98E-08	        2.6021E-06	
+#
+#				
+#m_metal = (Metal mass, no H/He) =    1.8477E-02		
+#(m_H + m_He)						        =        1.3238		           
+#(m_H + m_He + m_metal)	        =        1.3423		
+#				
+#mass fract metals = m_metal / (m_H + m_He + m_metal)   = 1.3765E-02		
+#
+#
+#
+#NOTE : 
+#	This is Table 7.1 in Hazy Part 1 : Introduction to CLOUDY by Ferland and friends.
+#
+# When Ali ran CLOUDY, he specified the metallicity. Above is "metals = 0"
+#	i.e. solar metalicity.  If "metals = -2" the "m_metal = 1.8477E-04" and 
+#	the "mass fract metals = 1.3955E-04" because the relative m_He and m_H 
+#	stay the same.
+#	
+#	Also, when I ran CLOUDY, "n_He = 0.1 n_H". Here I changed it so that 
+# "n_He = 0.0789 n_H" which is the primordial abundance NOT solar. 
+# This makes life easier, because it is what you get when HYDROGEN_MASS_FRAC = 0.76 
+# in GADGET. This is a hack, but makes it MUCH easier when calculating the metal mass
+#	fraction. Essentially we are NOT following the He enrichment.
+#
+#	We can get away with this because Helium contributes relatively little to 
+#	the overall cooling rate. You can see this for yourself by trying different
+#	abundances in CLOUDY. I have not done this, but when comparing my cooling rates
+#	with low metallicity ("metals = -3") to Katz et al. (1996) cooling curves with
+#	primordial abundance there was neglibigle difference. 
