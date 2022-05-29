@@ -11,6 +11,7 @@
 #
 import sys
 import struct
+import numpy as np
 from error import exit_with_error
 from classes import HEADER_V2
 from classes import PARTICLE
@@ -307,15 +308,61 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
 
 
 
-#def read_gadget2_snapshot(Path=None, Endian="little"):
-#    """
-#    ARGS:
-#        Path   : (str) path to snapshot file 
-#        Endian : (str) endianness
-#    DESCRIPTION:
-#        This function reads a snapshot file that was created by gadget2-ali, which 
-#        includes feedback (i.e. chemical enrichment) and star formation.
-#    RETURN:
-#    DEBUG:
-#    FUTURE:
-#    """
+
+def read_abundances():
+    """
+    ARGS:
+    DESCRIPTION:
+        This function reads a src/Solar_Abundances.txt and returns the 
+        elements, atomic mass and abundance for each element.
+    RETURN:
+    DEBUG:
+    FUTURE:
+    """
+    path = "src/Solar_Abundances.txt"
+    symbolL = []                        # column 1, Periodic Table abrev. for elements
+    aMassL  = []                        # column 2, Atomic Mass
+    abundL  = []                        # column 3, (n_i/n_H)_solar = solar abundunce
+    prodL   = []                        # column 4, (atomic mass) * (n_i/n_H)_solar
+    fin = open(path, "r")
+    for line in fin:
+        # ignore comments
+        if(line[0] == "#"):
+            continue
+        line = line.split()
+        symbolL.append(line[0])
+        aMassL.append(float(line[1]))
+        abundL.append(float(line[2]))
+        prodL.append(float(line[3]))
+    # compute massFracMetal     = m_metal / (m_H + m_He + m_metal)
+    top    = 0                   # numerator
+    bottom = 0                   # denominator
+    for i in range(len(symbolL)):
+        if(symbolL[i] == "H" or symbolL[i] == "He"):
+            bottom += prodL[i]
+        else:
+            top += prodL[i]
+            bottom += prodL[i]
+        # Sanity check
+        if(np.isclose(prodL[i], aMassL[i]*abundL[i], rtol=0.0001) == False):
+            exit_with_error("ERROR!!! The columns don't match for {} = {} * {}"
+                            "= {}".format(symbolL[i], aMassL[i], abundL[i], prodL[i]))
+    massFracMetal = top / bottom
+    print("massFracMetal = {}".format(massFracMetal))
+    return(symbolL, aMassL, abundL, prodL, massFracMetal)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

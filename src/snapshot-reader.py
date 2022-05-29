@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 
 from error import exit_with_error
 from functions import read_gadget2_snapshot
+from functions import read_abundances
 
 
 
@@ -95,6 +96,8 @@ def main():
     startTime = time.time()
     (pL, header) = read_gadget2_snapshot(Path=path, Endian=edn)
 
+    symbolL, aMassL, abundL, prodL, massFracMetal = read_abundances()
+
 
     ###### Let's try to plot the mass density ######
     array = np.zeros([100,100],dtype=np.float64)
@@ -122,7 +125,7 @@ def main():
             i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
             j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
             #print(i,j)
-            array[i,j] += pL[k].Cf
+            array[i,j] += pL[k].C
     
     array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
                      header.npartV[3] + header.npartV[4] + header.npartV[5])
