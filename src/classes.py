@@ -63,22 +63,23 @@ class HEADER_V2:
 
         ############
         # SFR flag 
+        self.flagD  = dict()
         dh = 4
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         h += dh
         if(flag == 1):
-            self.flag_sfr   = True          # bool, Star formation 
+            self.flagD['sfr'] = True          # bool, Star formation 
         elif(flag == 0):
-            self.flag_sfr   = False         # bool, Star formation 
+            self.flagD['sfr'] = False         # bool, Star formation 
             
         ############
         # Feedback flag 
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         h += dh
         if(flag == 1):
-            self.flag_feed  = True          # bool, Feedback
+            self.flagD['feed'] = True          # bool, Feedback
         elif(flag == 0):
-            self.flag_feed  = False         # bool, Feedback
+            self.flagD['feed'] = False         # bool, Feedback
 
         ############
         # int, Num particles of each type in this snapshot
@@ -92,9 +93,9 @@ class HEADER_V2:
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         h += dh
         if(flag == 1):
-            self.flag_cooling = True        # bool, Cooling included
+            self.flagD['cooling'] = True        # bool, Cooling included
         elif(flag == 0):
-            self.flag_cooling = False       # bool, Cooling included
+            self.flagD['cooling'] = False       # bool, Cooling included
 
         ############
         # N files in multi-file snapshot
@@ -127,18 +128,18 @@ class HEADER_V2:
         dh = 4
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         if(flag == 1):
-            self.flag_stellarage = True         # bool
+            self.flagD['stellarage'] = True         # bool
         elif(flag == 0):
-            self.flag_stellarage = False        # bool
+            self.flagD['stellarage'] = False        # bool
         h += dh
 
         ############
         # File contains metallicity for gas and star particles
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         if(flag == 1):
-            self.flag_metals= True              # bool
+            self.flagD['metals'] = True              # bool
         elif(flag == 0):
-            self.flag_metals= False             # bool
+            self.flagD['metals'] = False             # bool
         h += dh
 
         ############
@@ -152,9 +153,9 @@ class HEADER_V2:
         # flags that IC-file contains entropy instead of u 
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         if(flag == 1):
-            self.flag_entropy_not_u = True # 
+            self.flagD['entropy_not_u'] = True # 
         elif(flag == 0):
-            self.flag_entropy_not_u =False # 
+            self.flagD['entropy_not_u'] = False # 
         h += dh
         
 
@@ -162,9 +163,9 @@ class HEADER_V2:
         # flags Type II SN were present
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         if(flag == 1):
-            self.flag_RII = True # 
+            self.flagD['RII'] = True # 
         elif(flag == 0):
-            self.flag_RII =False # 
+            self.flagD['RII'] = False # 
         h += dh
 
 
@@ -172,9 +173,9 @@ class HEADER_V2:
         # flags Type Ia SN were present
         flag = struct.unpack(edn+'i', Bytes[h:h+dh])[0] # double, redshift
         if(flag == 1):
-            self.flag_RIa= True # 
+            self.flagD['RIa'] = True # 
         elif(flag == 0):
-            self.flag_RIa=False # 
+            self.flagD['RIa'] = False # 
         h += dh
 
         ############
@@ -187,231 +188,232 @@ class HEADER_V2:
         # if h=204 and the below offset is excluded. Why this is the case, I have no friggin' 
         # idea, other than there must be a bug somewhere.
         #h += 4
+        self.metalD = dict()
 
         ############
         # Carbon flag
         dh = 1
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Carbon = True # 
+            self.metalD['C'] = True # 
         elif(flag == 0):
-            self.flag_Carbon =False # 
+            self.metalD['C'] = False # 
         h += dh
 
         ############
         # Nitrogen flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Nitrogen = True # 
+            self.metalD['N'] = True # 
         elif(flag == 0):
-            self.flag_Nitrogen =False # 
+            self.metalD['N'] = False # 
         h += dh
 
         ############
         # Oxygen flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Oxygen    = True # 
+            self.metalD['O'] = True # 
         elif(flag == 0):
-            self.flag_Oxygen    =False # 
+            self.metalD['O'] = False # 
         h += dh
 
         ############
         # Florine flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Florine       = True # 
+            self.metalD['F'] = True # 
         elif(flag == 0):
-            self.flag_Florine       =False # 
+            self.metalD['F'] = False # 
         h += dh
 
         ############
         # Neon flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Neon = True # 
+            self.metalD['Ne'] = True # 
         elif(flag == 0):
-            self.flag_Neon =False # 
+            self.metalD['Ne'] = False # 
         h += dh
 
         ############
         # Sodium Flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Sodium = True # 
+            self.metalD['Na'] = True # 
         elif(flag == 0):
-            self.flag_Sodium =False # 
+            self.metalD['Na'] = False # 
         h += dh
 
         ############
         # Magnesium flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Magnesium = True # 
+            self.metalD['Mg'] = True # 
         elif(flag == 0):
-            self.flag_Magnesium =False # 
+            self.metalD['Mg'] = False # 
         h += dh
 
         ############
         # Aluminum flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Aluminum  = True # 
+            self.metalD['Al'] = True # 
         elif(flag == 0):
-            self.flag_Aluminum  =False # 
+            self.metalD['Al'] = False # 
         h += dh
 
         ############
         # Silicon flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Silicon       = True # 
+            self.metalD['Si'] = True # 
         elif(flag == 0):
-            self.flag_Silicon       =False # 
+            self.metalD['Si'] = False # 
         h += dh
 
         ############
         # Phosphorus flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Phosphorus    = True # 
+            self.metalD['P'] = True # 
         elif(flag == 0):
-            self.flag_Phosphorus    =False # 
+            self.metalD['P'] = False # 
         h += dh
 
         ############
         # Sulfur flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Sulfur        = True # 
+            self.metalD['S'] = True # 
         elif(flag == 0):
-            self.flag_Sulfur        =False # 
+            self.metalD['S'] = False # 
         h += dh
 
         ############
         # Chlorine flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Chlorine      = True # 
+            self.metalD['Cl'] = True # 
         elif(flag == 0):
-            self.flag_Chlorine      =False # 
+            self.metalD['Cl'] = False # 
         h += dh
 
         ############
         # Argon flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Argon         = True # 
+            self.metalD['Ar'] = True # 
         elif(flag == 0):
-            self.flag_Argon         =False # 
+            self.metalD['Ar'] = False # 
         h += dh
 
         ############
         # Potassium flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Potassium     = True # 
+            self.metalD['K'] = True # 
         elif(flag == 0):
-            self.flag_Potassium     =False # 
+            self.metalD['K'] = False # 
         h += dh
 
         ############
         # Calcium flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Calcium       = True # 
+            self.metalD['Ca'] = True # 
         elif(flag == 0):
-            self.flag_Calcium       =False # 
+            self.metalD['Ca'] = False # 
         h += dh
 
         ############
         # Scandium flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Scandium      = True # 
+            self.metalD['Sc'] = True # 
         elif(flag == 0):
-            self.flag_Scandium      =False # 
+            self.metalD['Sc'] = False # 
         h += dh
 
         ############
         # Titanium flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Titanium      = True # 
+            self.metalD['Ti'] = True # 
         elif(flag == 0):
-            self.flag_Titanium      =False # 
+            self.metalD['Ti'] = False # 
         h += dh
 
         ############
         # Vanadium flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Vanadium      = True # 
+            self.metalD['V'] = True # 
         elif(flag == 0):
-            self.flag_Vanadium      =False # 
+            self.metalD['V'] = False # 
         h += dh
 
         ############
         # Chromium flag 
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Chromium      = True # 
+            self.metalD['Cr'] = True # 
         elif(flag == 0):
-            self.flag_Chromium      =False # 
+            self.metalD['Cr'] = False # 
         h += dh
 
         ############
         # Manganese flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Manganese     = True # 
+            self.metalD['Mn'] = True # 
         elif(flag == 0):
-            self.flag_Manganese     =False # 
+            self.metalD['Mn'] = False # 
         h += dh
 
         ############
         # Iron flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Iron          = True # 
+            self.metalD['Fe'] = True # 
         elif(flag == 0):
-            self.flag_Iron          =False # 
+            self.metalD['Fe'] = False # 
         h += dh
 
         ############
         # Cobalt flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Cobalt        = True # 
+            self.metalD['Co'] = True # 
         elif(flag == 0):
-            self.flag_Cobalt        =False # 
+            self.metalD['Co'] = False # 
         h += dh
 
         ############
         # Nickle flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Nickel        = True # 
+            self.metalD['Ni'] = True # 
         elif(flag == 0):
-            self.flag_Nickel        =False # 
+            self.metalD['Ni'] = False # 
         h += dh
 
         ############
         # Copper flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Copper        = True # 
+            self.metalD['Cu'] = True # 
         elif(flag == 0):
-            self.flag_Copper        =False # 
+            self.metalD['Cu'] = False # 
         h += dh
 
         ############
         # Zinc flag
         flag = int(struct.unpack(edn+'c', Bytes[h:h+dh])[0]) # 
         if(flag == 1):
-            self.flag_Zinc          = True # 
+            self.metalD['Zn'] = True # 
         elif(flag == 0):
-            self.flag_Zinc          =False # 
+            self.metalD['Zn'] = False # 
         h += dh
 
         #char fill[27];               // fills to 256 Bytes
@@ -468,7 +470,7 @@ class HEADER_V2:
         print("{:>22} : {} ".format("", self.npartTotalHighWord[5]))
 
         # flags that IC-file contains entropy instead of U
-        print("{:>22} : {} ".format("", self.flag_entropy_not_u))
+        print("{:>22} : {} ".format("", self.flagD['entropy_not_u']))
             
         # Cosmological Parameters
         print("\n\n############ Cosmological Parameters ############")
@@ -484,74 +486,74 @@ class HEADER_V2:
 
         print("\n\n############ Feedback Parameters ############")
         # Cooling
-        print("{:>22} : {} ".format("cooling", self.flag_cooling))
+        print("{:>22} : {} ".format("cooling", self.flagD['cooling']))
         # Star formation flags
-        print("{:>22} : {}".format("flag_sfr", self.flag_sfr))
-        print("{:>22} : {}".format("flag_feed", self.flag_feed))
+        print("{:>22} : {}".format("flag_sfr", self.flagD['sfr']))
+        print("{:>22} : {}".format("flag_feed", self.flagD['feed']))
 
         # Stellar Age
-        print("{:>22} : {} ".format("StellarAge", self.flag_stellarage))
+        print("{:>22} : {} ".format("StellarAge", self.flagD['stellarage']))
 
         # Metals
-        print("{:>22} : {} \n".format("flag_metals", self.flag_metals))
+        print("{:>22} : {} \n".format("flag_metals", self.flagD['metals']))
 
         # Type II SN
-        print("{:>22} : {} ".format("Type II SNR", self.flag_RII))
+        print("{:>22} : {} ".format("Type II SNR", self.flagD['RII']))
 
         # Type Ia SN
-        print("{:>22} : {} ".format("Type Ia SNR", self.flag_RIa))
+        print("{:>22} : {} ".format("Type Ia SNR", self.flagD['RIa']))
 
         # Metals
-        if(self.flag_Carbon):
-            print("{:>22} : {} ".format("flag_Carbon", self.flag_Carbon))
-        if(self.flag_Nitrogen):
-            print("{:>22} : {} ".format("flag_Nitrogen", self.flag_Nitrogen))
-        if(self.flag_Oxygen):
-            print("{:>22} : {} ".format("flag_Oxygen", self.flag_Oxygen))
-        if(self.flag_Florine):
-            print("{:>22} : {} ".format("flag_Florine", self.flag_Florine))
-        if(self.flag_Neon):
-            print("{:>22} : {} ".format("flag_Neon", self.flag_Neon))
-        if(self.flag_Sodium):
-            print("{:>22} : {} ".format("flag_Sodium", self.flag_Sodium))
-        if(self.flag_Magnesium):
-            print("{:>22} : {} ".format("flag_Magnesium", self.flag_Magnesium))
-        if(self.flag_Aluminum):
-            print("{:>22} : {} ".format("flag_Aluminum", self.flag_Aluminum))
-        if(self.flag_Silicon):
-            print("{:>22} : {} ".format("flag_Silicon", self.flag_Silicon))
-        if(self.flag_Phosphorus):
-            print("{:>22} : {} ".format("flag_Phosphorus", self.flag_Phosphorus))
-        if(self.flag_Sulfur):
-            print("{:>22} : {} ".format("flag_Sulfur", self.flag_Sulfur))
-        if(self.flag_Chlorine):
-            print("{:>22} : {} ".format("flag_Chlorine", self.flag_Chlorine))
-        if(self.flag_Argon):
-            print("{:>22} : {} ".format("flag_Argon", self.flag_Argon))
-        if(self.flag_Potassium):
-            print("{:>22} : {} ".format("flag_Potassium", self.flag_Potassium))
-        if(self.flag_Calcium):
-            print("{:>22} : {} ".format("flag_Calcium", self.flag_Calcium))
-        if(self.flag_Scandium):
-            print("{:>22} : {} ".format("flag_Scandium", self.flag_Scandium))
-        if(self.flag_Titanium):
-            print("{:>22} : {} ".format("flag_Titanium", self.flag_Titanium))
-        if(self.flag_Vanadium):
-            print("{:>22} : {} ".format("flag_Vanadium", self.flag_Vanadium))
-        if(self.flag_Chromium):
-            print("{:>22} : {} ".format("flag_Chromium", self.flag_Chromium))
-        if(self.flag_Manganese):
-            print("{:>22} : {} ".format("flag_Manganese", self.flag_Manganese))
-        if(self.flag_Iron):
-            print("{:>22} : {} ".format("flag_Iron", self.flag_Iron))
-        if(self.flag_Cobalt):
-            print("{:>22} : {} ".format("flag_Cobalt", self.flag_Cobalt))
-        if(self.flag_Nickel):
-            print("{:>22} : {} ".format("flag_Nickel", self.flag_Nickel))
-        if(self.flag_Copper):
-            print("{:>22} : {} ".format("flag_Copper", self.flag_Copper))
-        if(self.flag_Zinc):
-            print("{:>22} : {} ".format("flag_Zinc", self.flag_Zinc))
+        if(self.metalD['C']):
+            print("{:>22} : {} ".format("metalD['C']", self.metalD['C']))
+        if(self.metalD['N']):
+            print("{:>22} : {} ".format("metalD['N']", self.metalD['N']))
+        if(self.metalD['O']):
+            print("{:>22} : {} ".format("metalD['O']", self.metalD['O']))
+        if(self.metalD['F']):
+            print("{:>22} : {} ".format("metalD['F']", self.metalD['F']))
+        if(self.metalD['Ne']):
+            print("{:>22} : {} ".format("metalD['Ne']", self.metalD['Ne']))
+        if(self.metalD['Na']):
+            print("{:>22} : {} ".format("metalD['Na']", self.metalD['Na']))
+        if(self.metalD['Mg']):
+            print("{:>22} : {} ".format("metalD['Mg']", self.metalD['Mg']))
+        if(self.metalD['Al']):
+            print("{:>22} : {} ".format("metalD['Al']", self.metalD['Al']))
+        if(self.metalD['Si']):
+            print("{:>22} : {} ".format("metalD['Si']", self.metalD['Si']))
+        if(self.metalD['P']):
+            print("{:>22} : {} ".format("metalD['P']", self.metalD['P']))
+        if(self.metalD['S']):
+            print("{:>22} : {} ".format("metalD['S']", self.metalD['S']))
+        if(self.metalD['Cl']):
+            print("{:>22} : {} ".format("metalD['Cl']", self.metalD['Cl']))
+        if(self.metalD['Ar']):
+            print("{:>22} : {} ".format("metalD['Ar']", self.metalD['Ar']))
+        if(self.metalD['K']):
+            print("{:>22} : {} ".format("metalD['K']", self.metalD['K']))
+        if(self.metalD['Ca']):
+            print("{:>22} : {} ".format("metalD['Ca']", self.metalD['Ca']))
+        if(self.metalD['Sc']):
+            print("{:>22} : {} ".format("metalD['Sc']", self.metalD['Sc']))
+        if(self.metalD['Ti']):
+            print("{:>22} : {} ".format("metalD['Ti']", self.metalD['Ti']))
+        if(self.metalD['V']):
+            print("{:>22} : {} ".format("metalD['V']", self.metalD['V']))
+        if(self.metalD['Cr']):
+            print("{:>22} : {} ".format("metalD['Cr']", self.metalD['Cr']))
+        if(self.metalD['Mn']):
+            print("{:>22} : {} ".format("metalD['Mn']", self.metalD['Mn']))
+        if(self.metalD['Fe']):
+            print("{:>22} : {} ".format("metalD['Fe']", self.metalD['Fe']))
+        if(self.metalD['Co']):
+            print("{:>22} : {} ".format("metalD['Co']", self.metalD['Co']))
+        if(self.metalD['Ni']):
+            print("{:>22} : {} ".format("metalD['Ni']", self.metalD['Ni']))
+        if(self.metalD['Cu']):
+            print("{:>22} : {} ".format("metalD['Cu']", self.metalD['Cu']))
+        if(self.metalD['Zn']):
+            print("{:>22} : {} ".format("metalD['Zn']", self.metalD['Zn']))
 
 
 
@@ -590,58 +592,59 @@ class PARTICLE:
         self.rIa  = -1
         self.u    = VelV
         self.age  = -1
+        self.metalD = dict()
         # These are masses, e.g. self.C is the mass of carbon in the part
-        self.C   = -1   
-        self.N   = -1
-        self.O   = -1
-        self.F   = -1
-        self.Ne  = -1
-        self.Na  = -1
-        self.Ma  = -1
-        self.Al  = -1
-        self.Si  = -1
-        self.P   = -1
-        self.S   = -1
-        self.Cl  = -1
-        self.Ar  = -1
-        self.K   = -1
-        self.Ca  = -1
-        self.Sc  = -1
-        self.Ti  = -1
-        self.V   = -1
-        self.Cr  = -1
-        self.Mn  = -1
-        self.Fe  = -1
-        self.Co  = -1
-        self.Ni  = -1
-        self.Cu  = -1
-        self.Zn  = -1
+        self.metalD['C']   = -1   
+        self.metalD['N']   = -1
+        self.metalD['O']   = -1
+        self.metalD['F']   = -1
+        self.metalD['Ne']  = -1
+        self.metalD['Na']  = -1
+        self.metalD['Ma']  = -1
+        self.metalD['Al']  = -1
+        self.metalD['Si'] = -1
+        self.metalD['P']  = -1
+        self.metalD['S']  = -1
+        self.metalD['Cl'] = -1
+        self.metalD['Ar'] = -1
+        self.metalD['K']  = -1
+        self.metalD['Ca'] = -1
+        self.metalD['Sc'] = -1
+        self.metalD['Ti'] = -1
+        self.metalD['V']  = -1
+        self.metalD['Cr']  = -1
+        self.metalD['Mn']  = -1
+        self.metalD['Fe']  = -1
+        self.metalD['Co']  = -1
+        self.metalD['Ni']  = -1
+        self.metalD['Cu']  = -1
+        self.metalD['Zn']  = -1
         # Recall that metallicity is defined as log10[n_zi / n_H] STOPPED HERE!!
-        self.C   = -1   
-        self.N   = -1
-        self.O   = -1
-        self.F   = -1
-        self.Ne  = -1
-        self.Na  = -1
-        self.Ma  = -1
-        self.Al  = -1
-        self.Si  = -1
-        self.P   = -1
-        self.S   = -1
-        self.Cl  = -1
-        self.Ar  = -1
-        self.K   = -1
-        self.Ca  = -1
-        self.Sc  = -1
-        self.Ti  = -1
-        self.V   = -1
-        self.Cr  = -1
-        self.Mn  = -1
-        self.Fe  = -1
-        self.Co  = -1
-        self.Ni  = -1
-        self.Cu  = -1
-        self.Zn  = -1
+        #self.C   = -1   
+        #self.N   = -1
+        #self.O   = -1
+        #self.F   = -1
+        #self.Ne  = -1
+        #self.Na  = -1
+        #self.Ma  = -1
+        #self.Al  = -1
+        #self.Si  = -1
+        #self.P   = -1
+        #self.S   = -1
+        #self.Cl  = -1
+        #self.Ar  = -1
+        #self.K   = -1
+        #self.Ca  = -1
+        #self.Sc  = -1
+        #self.Ti  = -1
+        #self.V   = -1
+        #self.Cr  = -1
+        #self.Mn  = -1
+        #self.Fe  = -1
+        #self.Co  = -1
+        #self.Ni  = -1
+        #self.Cu  = -1
+        #self.Zn  = -1
 
 
 class ELEMENT:
@@ -658,13 +661,13 @@ class ELEMENT:
         """
 
 
-def read_metal(PL = None, Header=None, Metal=None, Short=None, FloatSize=4, Fin=None,
+
+def read_metal(PL = None, Header=None, Short=None, FloatSize=4, Fin=None,
                Endien="<"):
     """
     ARGS:
         PL = Particle List
         Header = header
-        Metal  = (str) full name of metal to read
         Short  = (str) short (IUPAC) name of metal to read
         Fin    = Input file (already opened)
         Endien = string, '<' == little, '>' == big
@@ -675,19 +678,19 @@ def read_metal(PL = None, Header=None, Metal=None, Short=None, FloatSize=4, Fin=
     FUTURE:
     """
     edn = Endien
-    if(getattr(Header, "flag_" + Metal) == True):
-        print("Reading {} Mass Frac".format(Metal))
-        buf    = Fin.read(4)        # buffer
-        # Gas 
-        for i in range(Header.npartV[0]):
-            bytes = Fin.read(FloatSize)
-            mass  = struct.unpack(edn+"f", bytes)[0]
-            setattr(PL[i], Short, mass)
+    #if(getattr(Header, "flag_" + Metal) == True):
+    print("Reading {} Mass Frac".format(Short))
+    buf    = Fin.read(4)        # buffer
+    # Gas 
+    for i in range(Header.npartV[0]):
+        bytes = Fin.read(FloatSize)
+        mass  = struct.unpack(edn+"f", bytes)[0]
+        setattr(PL[i], Short, mass)
 
-        # Stars
-        offset = Header.npartV[0] + Header.npartV[1] + Header.npartV[2] + Header.npartV[3]
-        for i in range(Header.npartV[4]):
-            bytes = Fin.read(FloatSize)
-            mass  = struct.unpack(edn+"f", bytes)[0]
-            setattr(PL[offset + i], Short, mass)
-        buf    = Fin.read(4)        # buffer
+    # Stars
+    offset = Header.npartV[0] + Header.npartV[1] + Header.npartV[2] + Header.npartV[3]
+    for i in range(Header.npartV[4]):
+        bytes = Fin.read(FloatSize)
+        mass  = struct.unpack(edn+"f", bytes)[0]
+        setattr(PL[offset + i], Short, mass)
+    buf    = Fin.read(4)        # buffer

@@ -162,7 +162,7 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
         ##### I think I'm missing chunks for TypeIa_SFR and TypeII_SFR, should be for star particles NOT gas.
     
         ########### Type II SN Rate ###########
-        if(header.flag_RII == True):
+        if(header.flagD['RII'] == True):
             buf    = fin.read(4)        # buffer
             offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
             for i in range(header.npartV[4]):
@@ -172,7 +172,7 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
             buf    = fin.read(4)        # buffer
             
         ########### Type Ia SN Rate ###########
-        if(header.flag_RIa == True):
+        if(header.flagD['RIa'] == True):
             buf    = fin.read(4)        # buffer
             offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
             for i in range(header.npartV[4]):
@@ -183,7 +183,7 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
             
 
         ########### Stellar age ###########
-        if(header.flag_sfr == True and header.flag_stellarage == True):
+        if(header.flagD['sfr'] == True and header.flagD['stellarage'] == True):
             buf    = fin.read(4)        # buffer
             offset = header.npartV[0] + header.npartV[1] + header.npartV[2] + header.npartV[3]
             for i in range(header.npartV[4]):
@@ -194,100 +194,103 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
             
     
     ########### Metals Fraction ###########
-    if(header.flag_metals == True):
+    if(header.flagD['metals'] == True):
+        # Get metal keys where it is True
+        mKeyL = [k for k, v in header.metalD.items() if v == True]
         if(header.npartV[0] > 0 or header.npartV[4] > 0):
-
+            for key in mKeyL:
+                read_metal(PL=pL, Header=header, Short=key, Fin=fin)
             ########### Carbon ###########
-            if(header.flag_Carbon == True):
-                read_metal(PL=pL, Header=header, Metal="Carbon", Short="C", Fin=fin)
+            #if(header.metalD['C'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Carbon", Short="C", Fin=fin)
 
-            ########### Nitrogen ###########
-            if(header.flag_Nitrogen == True):
-                read_metal(PL=pL, Header=header, Metal="Nitrogen", Short="N", Fin=fin)
+            ############ Nitrogen ###########
+            #if(header.metalD['N'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Nitrogen", Short="N", Fin=fin)
     
-            ########### Oxygen ###########
-            if(header.flag_Oxygen == True):
-                read_metal(PL=pL, Header=header, Metal="Oxygen", Short="O", Fin=fin)
+            ############ Oxygen ###########
+            #if(header.metalD['O'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Oxygen", Short="O", Fin=fin)
     
-            ########### Florine ###########
-            if(header.flag_Florine== True):
-                read_metal(PL=pL, Header=header, Metal="Florine", Short="F", Fin=fin)
+            ############ Florine ###########
+            #if(header.metalD['F'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Florine", Short="F", Fin=fin)
     
-            ########### Neon ###########
-            if(header.flag_Neon == True):
-                read_metal(PL=pL, Header=header, Metal="Neon", Short="Ne", Fin=fin)
+            ############ Neon ###########
+            #if(header.metalD['Ne'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Neon", Short="Ne", Fin=fin)
     
-            ########### Sodium ###########
-            if(header.flag_Sodium == True):
-                read_metal(PL=pL, Header=header, Metal="Sodium", Short="Na", Fin=fin)
+            ############ Sodium ###########
+            #if(header.metalD['Na'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Sodium", Short="Na", Fin=fin)
     
-            ########### Magnesium ###########
-            if(header.flag_Magnesium == True):
-                read_metal(PL=pL, Header=header, Metal="Magnesium", Short="Mg", Fin=fin)
+            ############ Magnesium ###########
+            #if(header.metalD['Mg'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Magnesium", Short="Mg", Fin=fin)
     
-            ########### Aluminum ###########
-            if(header.flag_Aluminum == True):
-                read_metal(PL=pL, Header=header, Metal="Aluminum", Short="Al", Fin=fin)
+            ############ Aluminum ###########
+            #if(header.metalD['Al'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Aluminum", Short="Al", Fin=fin)
     
-            ########### Silicon ###########
-            if(header.flag_Silicon == True):
-                read_metal(PL=pL, Header=header, Metal="Silicon", Short="Si", Fin=fin)
+            ############ Silicon ###########
+            #if(header.metalD['Si'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Silicon", Short="Si", Fin=fin)
     
-            ########### Phosphorus ###########
-            if(header.flag_Phosphorus == True):
-                read_metal(PL=pL, Header=header, Metal="Phosphorus", Short="P", Fin=fin)
+            ############ Phosphorus ###########
+            #if(header.metalD['P'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Phosphorus", Short="P", Fin=fin)
     
-            ########### Sulfur ###########
-            if(header.flag_Sulfur == True):
-                read_metal(PL=pL, Header=header, Metal="Sulfur", Short="S", Fin=fin)
+            ############ Sulfur ###########
+            #if(header.metalD['S'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Sulfur", Short="S", Fin=fin)
     
-            ########### Chlorine ###########
-            if(header.flag_Chlorine == True):
-                read_metal(PL=pL, Header=header, Metal="Chlorine", Short="Cl", Fin=fin)
+            ############ Chlorine ###########
+            #if(header.metalD['Cl'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Chlorine", Short="Cl", Fin=fin)
     
-            ########### Argon ###########
-            if(header.flag_Argon == True):
-                read_metal(PL=pL, Header=header, Metal="Argon", Short="Ar", Fin=fin)
+            ############ Argon ###########
+            #if(header.metalD['Ar'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Argon", Short="Ar", Fin=fin)
     
-            ########### Potassium ###########
-            if(header.flag_Potassium == True):
-                read_metal(PL=pL, Header=header, Metal="Potassium", Short="K", Fin=fin)
+            ############ Potassium ###########
+            #if(header.metalD['K'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Potassium", Short="K", Fin=fin)
     
-            ########### Calcium ###########
-            if(header.flag_Calcium == True):
-                read_metal(PL=pL, Header=header, Metal="Calcium", Short="Ca", Fin=fin)
+            ############ Calcium ###########
+            #if(header.metalD['Ca'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Calcium", Short="Ca", Fin=fin)
     
-            ########### Scandium ###########
-            if(header.flag_Scandium == True):
-                read_metal(PL=pL, Header=header, Metal="Scandium", Short="Sc", Fin=fin)
+            ############ Scandium ###########
+            #if(header.metalD['Sc'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Scandium", Short="Sc", Fin=fin)
     
-            ########### Titanium ###########
-            if(header.flag_Titanium == True):
-                read_metal(PL=pL, Header=header, Metal="Titanium", Short="Ti", Fin=fin)
+            ############ Titanium ###########
+            #if(header.metalD['Ti'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Titanium", Short="Ti", Fin=fin)
     
-            ########### Vanadium ###########
-            if(header.flag_Vanadium == True):
-                read_metal(PL=pL, Header=header, Metal="Vanadium", Short="V", Fin=fin)
+            ############ Vanadium ###########
+            #if(header.metalD['V'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Vanadium", Short="V", Fin=fin)
     
-            ########### Chromium ###########
-            if(header.flag_Chromium == True):
-                read_metal(PL=pL, Header=header, Metal="Chromium", Short="Cr", Fin=fin)
+            ############ Chromium ###########
+            #if(header.metalD['Cr'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Chromium", Short="Cr", Fin=fin)
     
-            ########### Manganese ###########
-            if(header.flag_Manganese == True):
-                read_metal(PL=pL, Header=header, Metal="Manganese", Short="Mn", Fin=fin)
+            ############ Manganese ###########
+            #if(header.metalD['Mn'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Manganese", Short="Mn", Fin=fin)
     
-            ########### Iron ###########
-            if(header.flag_Iron == True):
-                read_metal(PL=pL, Header=header, Metal="Iron", Short="Fe", Fin=fin)
+            ############ Iron ###########
+            #if(header.metalD['Fe'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Iron", Short="Fe", Fin=fin)
     
-            ########### Cobalt ###########
-            if(header.flag_Cobalt == True):
-                read_metal(PL=pL, Header=header, Metal="Cobalt", Short="Co", Fin=fin)
+            ############ Cobalt ###########
+            #if(header.metalD['Co'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Cobalt", Short="Co", Fin=fin)
     
-            ########### Nickel ###########
-            if(header.flag_Nickel == True):
-                read_metal(PL=pL, Header=header, Metal="Nickel", Short="Ni", Fin=fin)
+            ############ Nickel ###########
+            #if(header.metalD['Ni'] == True):
+            #    read_metal(PL=pL, Header=header, Metal="Nickel", Short="Ni", Fin=fin)
         else:
             exit_with_error("ERROR!!! 'flag_metals' enabled but no gas or stars present!")
 
@@ -353,6 +356,28 @@ def read_abundances():
 
 
 
+def compute_metallicities(ParticleL=None, SymbolL=None, AMassL=None, AbundL=None,
+                          MassFracMetal=None, Header=None):
+    """
+    ARGS:
+        ParticleL   : List of Particles
+        SymbolL     : List of element symbols
+        AMassL      : List of Atomic Mass
+        AbundL      : List of Solar Abundances
+        MassFracMetal: float, Fraction of mass that are metals on sun
+        Header      : 
+    DESCRIPTION:
+        This function computes the metallicity for each particle, stores it in the elements'
+        already existing variable
+    RETURN:
+    DEBUG:
+    FUTURE:
+    """
+    if(getattr(Header, "flag_" + Metal) == True):
+        # Gas
+        for i in range(len(ParticleL)):
+            if(ParticleL[i].type == 0 or ParticleL[i].type == 4):
+                setattr(PL[i], Short, mass)
 
 
 
