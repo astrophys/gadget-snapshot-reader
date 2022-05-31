@@ -15,7 +15,7 @@ import numpy as np
 from error import exit_with_error
 from classes import HEADER_V2
 from classes import PARTICLE
-from classes import read_metal
+from classes import ELEMENT
 
 
 def read_gadget2_snapshot(Path=None, Endian="little"):
@@ -192,105 +192,16 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
                 pL[offset + i].age = age
             buf    = fin.read(4)        # buffer
             
-    
+    elemD, solarMassConst = read_abundances()
     ########### Metals Fraction ###########
     if(header.flagD['metals'] == True):
         # Get metal keys where it is True
-        mKeyL = [k for k, v in header.metalD.items() if v == True]
+        mKeyL = [k for k, v in header.metalMassD.items() if v == True]
         if(header.npartV[0] > 0 or header.npartV[4] > 0):
+            # Only read metals where the flag in header is True
             for key in mKeyL:
-                read_metal(PL=pL, Header=header, Short=key, Fin=fin)
-            ########### Carbon ###########
-            #if(header.metalD['C'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Carbon", Short="C", Fin=fin)
-
-            ############ Nitrogen ###########
-            #if(header.metalD['N'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Nitrogen", Short="N", Fin=fin)
-    
-            ############ Oxygen ###########
-            #if(header.metalD['O'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Oxygen", Short="O", Fin=fin)
-    
-            ############ Florine ###########
-            #if(header.metalD['F'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Florine", Short="F", Fin=fin)
-    
-            ############ Neon ###########
-            #if(header.metalD['Ne'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Neon", Short="Ne", Fin=fin)
-    
-            ############ Sodium ###########
-            #if(header.metalD['Na'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Sodium", Short="Na", Fin=fin)
-    
-            ############ Magnesium ###########
-            #if(header.metalD['Mg'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Magnesium", Short="Mg", Fin=fin)
-    
-            ############ Aluminum ###########
-            #if(header.metalD['Al'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Aluminum", Short="Al", Fin=fin)
-    
-            ############ Silicon ###########
-            #if(header.metalD['Si'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Silicon", Short="Si", Fin=fin)
-    
-            ############ Phosphorus ###########
-            #if(header.metalD['P'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Phosphorus", Short="P", Fin=fin)
-    
-            ############ Sulfur ###########
-            #if(header.metalD['S'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Sulfur", Short="S", Fin=fin)
-    
-            ############ Chlorine ###########
-            #if(header.metalD['Cl'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Chlorine", Short="Cl", Fin=fin)
-    
-            ############ Argon ###########
-            #if(header.metalD['Ar'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Argon", Short="Ar", Fin=fin)
-    
-            ############ Potassium ###########
-            #if(header.metalD['K'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Potassium", Short="K", Fin=fin)
-    
-            ############ Calcium ###########
-            #if(header.metalD['Ca'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Calcium", Short="Ca", Fin=fin)
-    
-            ############ Scandium ###########
-            #if(header.metalD['Sc'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Scandium", Short="Sc", Fin=fin)
-    
-            ############ Titanium ###########
-            #if(header.metalD['Ti'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Titanium", Short="Ti", Fin=fin)
-    
-            ############ Vanadium ###########
-            #if(header.metalD['V'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Vanadium", Short="V", Fin=fin)
-    
-            ############ Chromium ###########
-            #if(header.metalD['Cr'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Chromium", Short="Cr", Fin=fin)
-    
-            ############ Manganese ###########
-            #if(header.metalD['Mn'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Manganese", Short="Mn", Fin=fin)
-    
-            ############ Iron ###########
-            #if(header.metalD['Fe'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Iron", Short="Fe", Fin=fin)
-    
-            ############ Cobalt ###########
-            #if(header.metalD['Co'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Cobalt", Short="Co", Fin=fin)
-    
-            ############ Nickel ###########
-            #if(header.metalD['Ni'] == True):
-            #    read_metal(PL=pL, Header=header, Metal="Nickel", Short="Ni", Fin=fin)
+                read_metal(PL=pL, Header=header, Symbol=key, ElemD=elemD,
+                           SolarMassConst=solarMassConst, Fin=fin)
         else:
             exit_with_error("ERROR!!! 'flag_metals' enabled but no gas or stars present!")
 
@@ -319,73 +230,97 @@ def read_abundances():
         This function reads a src/Solar_Abundances.txt and returns the 
         elements, atomic mass and abundance for each element.
     RETURN:
+        elemD          : Dictionary of ELEMENT objects
+        solarMassConst : The Sum of Atomic Mass * Number fraction_solar, used in computing
+                         metallicities
     DEBUG:
     FUTURE:
     """
     path = "src/Solar_Abundances.txt"
-    symbolL = []                        # column 1, Periodic Table abrev. for elements
-    aMassL  = []                        # column 2, Atomic Mass
-    abundL  = []                        # column 3, (n_i/n_H)_solar = solar abundunce
-    prodL   = []                        # column 4, (atomic mass) * (n_i/n_H)_solar
+    elemD   = dict()
+    top    = 0                   # numerator
+    bottom = 0                   # denominator
     fin = open(path, "r")
     for line in fin:
         # ignore comments
         if(line[0] == "#"):
             continue
         line = line.split()
-        symbolL.append(line[0])
-        aMassL.append(float(line[1]))
-        abundL.append(float(line[2]))
-        prodL.append(float(line[3]))
-    # compute massFracMetal     = m_metal / (m_H + m_He + m_metal)
-    top    = 0                   # numerator
-    bottom = 0                   # denominator
-    for i in range(len(symbolL)):
-        if(symbolL[i] == "H" or symbolL[i] == "He"):
-            bottom += prodL[i]
+        symbol = line[0]             # column 1, Periodic Table abrev. for elements
+        aMass  = float(line[1])      # column 2, Atomic Mass
+        abund  = float(line[2])      # column 3, (n_i/n_H)_solar = solar abundunce
+        prod   = float(line[3])      # column 4, (atomic mass) * (n_i/n_H)_solar
+        elemD[symbol] = ELEMENT(Symbol=symbol, AtomicMass=aMass, NziNh = abund)
+        if(symbol == "H" or symbol == "He"):
+            bottom += prod
         else:
-            top += prodL[i]
-            bottom += prodL[i]
+            top += prod
+            bottom += prod
         # Sanity check
-        if(np.isclose(prodL[i], aMassL[i]*abundL[i], rtol=0.0001) == False):
+        if(np.isclose(prod, aMass*abund, rtol=0.0001) == False):
             exit_with_error("ERROR!!! The columns don't match for {} = {} * {}"
-                            "= {}".format(symbolL[i], aMassL[i], abundL[i], prodL[i]))
+                            "= {}".format(symbol, aMass, abund, prod))
+    # compute massFracMetal     = m_metal / (m_H + m_He + m_metal)
+    #for i in range(len(symbolL)):
     massFracMetal = top / bottom
+    solarMassConst= bottom
     print("massFracMetal = {}".format(massFracMetal))
-    return(symbolL, aMassL, abundL, prodL, massFracMetal)
+    print("solarMassConst= {}".format(solarMassConst))
+    return(elemD, solarMassConst)
 
 
 
-def compute_metallicities(ParticleL=None, SymbolL=None, AMassL=None, AbundL=None,
-                          MassFracMetal=None, Header=None):
+
+
+
+def read_metal(PL = None, Header=None, Symbol=None, FloatSize=4, ElemD=None,
+               SolarMassConst=None, Fin=None, Endien="<"):
     """
     ARGS:
-        ParticleL   : List of Particles
-        SymbolL     : List of element symbols
-        AMassL      : List of Atomic Mass
-        AbundL      : List of Solar Abundances
-        MassFracMetal: float, Fraction of mass that are metals on sun
-        Header      : 
+        PL = Particle List
+        Header  = header
+        Symbol  = (str) short (IUPAC) name of metal to read
+        ElemD   = Dictionary of ELEMENTS for computing_metallicity()
+        Fin     = Input file (already opened)
+        Endien  = string, '<' == little, '>' == big
     DESCRIPTION:
-        This function computes the metallicity for each particle, stores it in the elements'
-        already existing variable
+        Generalizes a very repetitive chunk of my code
     RETURN:
     DEBUG:
     FUTURE:
     """
-    if(getattr(Header, "flag_" + Metal) == True):
-        # Gas
-        for i in range(len(ParticleL)):
-            if(ParticleL[i].type == 0 or ParticleL[i].type == 4):
-                setattr(PL[i], Short, mass)
+    edn = Endien
+    #if(getattr(Header, "flag_" + Metal) == True):
+    print("Reading {} Mass Frac".format(Symbol))
+    buf    = Fin.read(4)        # buffer
+    # Gas
+    for i in range(Header.npartV[0]):
+        bytes = Fin.read(FloatSize)
+        mass  = struct.unpack(edn+"f", bytes)[0]
+        #setattr(PL[i], Symbol, mass)
+        PL[i].metalMassD[Symbol] =  mass
+        # Regarding metallicity, we need to
+        #   1. Compute our metal MASS fraction 
+        #   2. Compute the metal mass fraction at solar metallicity
+        #      --> This is why we need the SolarMassConst
+        #   3. Divide our metal mass frac by that at solar metallicity 
+        #   4. Take the log
+        PL[i].metallicityD[Symbol] = np.log10((mass / PL[i].mass) * 1 / (ElemD[Symbol].nzinh * ElemD[Symbol].amass / SolarMassConst))
 
-
-
-
-
-
-
-
+    # Stars
+    offset = Header.npartV[0] + Header.npartV[1] + Header.npartV[2] + Header.npartV[3]
+    for i in range(Header.npartV[4]):
+        bytes = Fin.read(FloatSize)
+        mass  = struct.unpack(edn+"f", bytes)[0]
+        PL[offset + i].metalMassD[Symbol]   = mass
+        # Regarding metallicity, we need to
+        #   1. Compute our metal MASS fraction 
+        #   2. Compute the metal mass fraction at solar metallicity
+        #      --> This is why we need the SolarMassConst
+        #   3. Divide our metal mass frac by that at solar metallicity 
+        #   4. Take the log
+        PL[offset + i].metallicityD[Symbol] = np.log10((mass / PL[offset + i].mass) * 1 / (ElemD[Symbol].nzinh * ElemD[Symbol].amass / SolarMassConst))
+    buf    = Fin.read(4)        # buffer
 
 
 
