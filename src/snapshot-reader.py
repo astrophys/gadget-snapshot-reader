@@ -131,6 +131,16 @@ def main():
     im = ax.imshow(array)
     plt.show()
     
+
+    ###### Let's try to Replicate gadget2/128part-25mpc/snapshot_016/mnc2file_gas.txt ######
+    print("Writing gas particles to output_gas.txt")
+    fout = open("output_gas.txt", "w+")
+    for p in pL:
+        if(p.type == 0):
+            fout.write("{:<.6e} {:<.6e} {:<.6e} {:<.6f} {:<.6f} {:<.6f} {:<.6f} {:<.6f} "
+                       "{:<.6f}\n".format(p.rho, p.u, p.mass, p.metallicityD['C'],
+                       p.metallicityD['O'], p.metallicityD['Ca'], p.metallicityD['Cr'],
+                       p.metallicityD['Mn'], p.metallicityD['Fe']))
     
     print("\n\nEnded : %s"%(time.strftime("%D:%H:%M:%S")))
     print("Run Time : {:.4f} h".format((time.time() - startTime)/3600.0))

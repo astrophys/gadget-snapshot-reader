@@ -192,7 +192,7 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
                 pL[offset + i].age = age
             buf    = fin.read(4)        # buffer
             
-    elemD, solarMassConst = read_abundances()
+    elemD, solarMassConst = read_abundances(header)
     ########### Metals Fraction ###########
     if(header.flagD['metals'] == True):
         # Get metal keys where it is True
@@ -223,9 +223,11 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
 
 
 
-def read_abundances():
+def read_abundances(Header=None):
     """
     ARGS:
+        Header : HEADER obj, only used to use the elements we are tracking to compute
+                 the SolarMassConst
     DESCRIPTION:
         This function reads a src/Solar_Abundances.txt and returns the 
         elements, atomic mass and abundance for each element.
@@ -253,7 +255,9 @@ def read_abundances():
         elemD[symbol] = ELEMENT(Symbol=symbol, AtomicMass=aMass, NziNh = abund)
         if(symbol == "H" or symbol == "He"):
             bottom += prod
-        else:
+        elif(symbol == "Li" or symbol == "Be" or symbol == "B"):
+            continue
+        elif(Header.metalMassD[symbol] == True):
             top += prod
             bottom += prod
         # Sanity check
