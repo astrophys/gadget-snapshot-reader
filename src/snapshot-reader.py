@@ -95,52 +95,63 @@ def main():
     startTime = time.time()
     (pL, header) = read_gadget2_snapshot(Path=path, Endian=edn)
 
+    ## Temporarily comment out for expediency
+    ### ###### Let's try to plot the mass density ######
+    ### array = np.zeros([100,100],dtype=np.float64)
+    ### # gas, dm and stars 
+    ### for k in range(len(pL)):
+    ###     # Check logic here
+    ###     i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
+    ###     j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
+    ###     #print(i,j)
+    ###     array[i,j] += pL[k].mass
+    ### 
+    ### array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
+    ###                  header.npartV[3] + header.npartV[4] + header.npartV[5])
+    ### array = np.log(array)
+    ### fig, ax = plt.subplots()
+    ### im = ax.imshow(array)
+    ### plt.show()
+    ### 
+    ### ###### Let's try to plot the Carbon mass Frac######
+    ### array = np.zeros([100,100],dtype=np.float64)
+    ### # gas, dm and stars 
+    ### for k in range(len(pL)):
+    ###     if(pL[k].type == 0 or pL[k].type ==4):
+    ###         # Check logic here
+    ###         i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
+    ###         j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
+    ###         #print(i,j)
+    ###         array[i,j] += pL[k].metalMassD['C']
+    ### 
+    ### array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
+    ###                  header.npartV[3] + header.npartV[4] + header.npartV[5])
+    ### array = np.log(array)
+    ### fig, ax = plt.subplots()
+    ### im = ax.imshow(array)
+    ### plt.show()
+    ###   
 
-    ###### Let's try to plot the mass density ######
-    array = np.zeros([100,100],dtype=np.float64)
-    # gas, dm and stars 
-    for k in range(len(pL)):
-        # Check logic here
-        i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
-        j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
-        #print(i,j)
-        array[i,j] += pL[k].mass
-    
-    array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
-                     header.npartV[3] + header.npartV[4] + header.npartV[5])
-    array = np.log(array)
-    fig, ax = plt.subplots()
-    im = ax.imshow(array)
-    plt.show()
-    
-    ###### Let's try to plot the Carbon mass Frac######
-    array = np.zeros([100,100],dtype=np.float64)
-    # gas, dm and stars 
-    for k in range(len(pL)):
-        if(pL[k].type == 0 or pL[k].type ==4):
-            # Check logic here
-            i = int(pL[k].posV[0]/header.boxSize * array.shape[0])
-            j = int(pL[k].posV[1]/header.boxSize * array.shape[1])
-            #print(i,j)
-            array[i,j] += pL[k].metalMassD['C']
-    
-    array = array / (header.npartV[0] + header.npartV[1] + header.npartV[2] +
-                     header.npartV[3] + header.npartV[4] + header.npartV[5])
-    array = np.log(array)
-    fig, ax = plt.subplots()
-    im = ax.imshow(array)
-    plt.show()
-    
+    ### ###### Let's try to Replicate gadget2/128part-25mpc/snapshot_016/mnc2file_gas.txt ######
+    ### print("Writing gas particles to output_gas.txt")
+    ### fout = open("output_gas.txt", "w+")
+    ### for p in pL:
+    ###     if(p.type == 0):
+    ###         fout.write("{:<.6e} {:<.6e} {:<.6e} {:<.6f} {:<.6f} {:<.6f} {:<.6f} {:<.6f} "
+    ###                    "{:<.6f}\n".format(p.rho, p.u, p.mass, p.metallicityD['C'],
+    ###                    p.metallicityD['O'], p.metallicityD['Ca'], p.metallicityD['Cr'],
+    ###                    p.metallicityD['Mn'], p.metallicityD['Fe']))
 
-    ###### Let's try to Replicate gadget2/128part-25mpc/snapshot_016/mnc2file_gas.txt ######
-    print("Writing gas particles to output_gas.txt")
-    fout = open("output_gas.txt", "w+")
+    ###### Let's try to Replicate gadget2/128part-25mpc/snapshot_016/mnc2file_star.txt ######
+    print("Writing gas particles to output_star.txt")
+    fout = open("output_star.txt", "w+")
     for p in pL:
-        if(p.type == 0):
-            fout.write("{:<.6e} {:<.6e} {:<.6e} {:<.6f} {:<.6f} {:<.6f} {:<.6f} {:<.6f} "
-                       "{:<.6f}\n".format(p.rho, p.u, p.mass, p.metallicityD['C'],
+        if(p.type == 4):
+            fout.write("{:<.6e} {:<.6e} {:<.6f} {:<.6f} {:<.6f} {:<.6f} {:<.6f} "
+                       "{:<.6f}\n".format(p.mass, p.age, p.metallicityD['C'],
                        p.metallicityD['O'], p.metallicityD['Ca'], p.metallicityD['Cr'],
                        p.metallicityD['Mn'], p.metallicityD['Fe']))
+    
     
     print("\n\nEnded : %s"%(time.strftime("%D:%H:%M:%S")))
     print("Run Time : {:.4f} h".format((time.time() - startTime)/3600.0))

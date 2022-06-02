@@ -7,6 +7,8 @@
 # TODO:
 # DEBUG:
 from error import exit_with_error
+#from functions import get_phys_time_My
+from scipy.integrate import quad
 import struct
 import numpy as np
 
@@ -416,6 +418,8 @@ class HEADER_V2:
             self.metalMassD['Zn'] = False # 
         h += dh
 
+        ### Do relevant computation
+        self.timeMy     = get_phys_time_My(self)                   # Physical time in My
         #char fill[27];               // fills to 256 Bytes
         #print(vars(self))
 
@@ -479,6 +483,7 @@ class HEADER_V2:
         print("{:>22} : {} ".format("HubbleParam", self.HubbleParam))
         # Scale factor - a
         print("{:>22} : {}".format("a", self.time))
+        print("{:>22} : {:<.3f}My".format("physTime", self.timeMy))
         # Redshift - z
         print("{:>22} : {}".format("redshift", self.z))
         # Box-size
@@ -670,3 +675,46 @@ class ELEMENT:
 
 
 
+def get_phys_time_My(Header=None):
+    """
+    ARGS:
+        Header : HEADER obj, only used to use the elements we are tracking to compute
+                 the SolarMassConst
+    DESCRIPTION:
+        This function integrates Friedman's eqn where we know H(a) = adot/a.
+        Separate and integrate
+
+                da/dt = a * H(a)  ---->  dt = da / (a * H(a)).
+
+        We take H(a) from Carrol & Ostlie (2nd) eqn 29.128. Recall Omega0 = Omega_matter.
+    RETURN:
+        Time in MegaYears since the Big Bang
+    NOTES:
+        1. Omega_k = 1 - All.Omega0 - All.OmegaLambda, Omega_r = 0.
+        2. HUBBLE is in (h/sec), All.HubbleParam is little 'h'
+        3. Taken almost exclusively from mnc2file_sph/src/functions.c:phys_time_integrand()
+    DEBUG:
+    FUTURE:
+    """
+    def integrand(a, Header):
+        """
+        ARGS:
+            a : (float) scale factor
+            aF: (float) Final (current) value of scale factor
+            Header : HEADER obj, only used to use the elements we are tracking to compute
+                     the SolarMassConst
+        DESCRIPTION:
+        RETURN:
+        DEBUG:
+        FUTURE:
+        """
+        h = 0.702               # 'little h'
+        H = 3.2407789e-18       # (h/s) mncfile_sph/src/allvars.h : HUBBLE
+        return 1.0 / (H * h) * pow(Header.Omega0 / a + Header.OmegaLambda * pow(a, 2.0) + (1 - Header.Omega0 - Header.OmegaLambda), -0.5);
+        #return a
+
+    secPerMy = 3.1557e13
+    # Integrate from a=0 (z~inf) to current Header.time (i.e. scale factor)
+    time = quad(integrand, 0, Header.time, args=(Header))
+    return(time[0]/secPerMy)
+    #return(quad(integrand, 0, 3, args=(Header)))

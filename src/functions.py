@@ -41,6 +41,8 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
     ########### Header ###########
     header = HEADER_V2(Bytes=headB, Endian="little")
     header.print()
+    #physTime = get_phys_time_My(header)
+    #print("physTime = {}".format(physTime))
     ngas   = header.npartV[0]
     ndm    = header.npartV[1]
     nstar  = header.npartV[4]
@@ -189,7 +191,7 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
             for i in range(header.npartV[4]):
                 bytes = fin.read(floatSize)
                 age   = struct.unpack(edn+"f", bytes)[0]
-                pL[offset + i].age = age
+                pL[offset + i].age = header.timeMy - age     # How old the star is in My
             buf    = fin.read(4)        # buffer
             
     elemD, solarMassConst = read_abundances(header)
@@ -325,8 +327,5 @@ def read_metal(PL = None, Header=None, Symbol=None, FloatSize=4, ElemD=None,
         #   4. Take the log
         PL[offset + i].metallicityD[Symbol] = np.log10((mass / PL[offset + i].mass) * 1 / (ElemD[Symbol].nzinh * ElemD[Symbol].amass / SolarMassConst))
     buf    = Fin.read(4)        # buffer
-
-
-
 
 
