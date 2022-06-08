@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 
 from error import exit_with_error
 from functions import read_gadget2_snapshot
+from functions import output_array_as_matlab_int
 
 
 
@@ -38,9 +39,11 @@ def print_help(Arg):
     FUTURE:
     """
     sys.stdout.write(
-            "\nUSAGE : python3 snapshot-reader.py snapshot_XXX [option]\n\n"
+            "\nUSAGE : python3 snapshot-reader.py snapshot_XXX [option] [nGrid] \n\n"
             "       snapshot_XXX : (str) path to a Gadget snapshot file\n"
-            "       [option]     : (str) [plot|out_cmp_gas|out_cmp_star|out_gas_matlab]\n"
+            "       [option]     : (str) [plot|out_cmp_gas|out_cmp_star|out_gas_matlab] [nGrid]\n"
+            "       [nGrid]      : (int) only requred when option == 'out_gas_matlab', is the\n"
+            "                      number of grids along one dimension, for a total of (nGrid**3) voxels\n"
             "                         \n")
     sys.exit(Arg)
 
@@ -77,13 +80,19 @@ def main():
                     sys.version_info[0]))
 
     ######### Get Command Line Options ##########
-    if(len(sys.argv) != 2 and len(sys.argv) != 3):
+    if(len(sys.argv) != 2 and len(sys.argv) != 3 and len(sys.argv) != 4):
         print_help(1)
     elif(len(sys.argv) == 2 and (sys.argv[1] == "--help" or sys.argv[1] == "-help")):
         print_help(0)
-    else:
+    elif(len(sys.argv) == 3):
         path=sys.argv[1]
         option=sys.argv[2]
+    elif(len(sys.argv) == 4):
+        path=sys.argv[1]
+        option=sys.argv[2]
+        nGrid =int(sys.argv[3])
+    else:
+        exit_with_error("ERROR!!! Invalid CL options : {}".format(sys.argv))
     # Endianness matters
     endian = "little"
     if(endian == "little"):
@@ -99,7 +108,7 @@ def main():
 
     ## Temporarily comment out for expediency
     ###### Let's try to plot the mass density ######
-    if(option == plot):
+    if(option == "plot"):
         array = np.zeros([100,100],dtype=np.float64)
         # gas, dm and stars 
         for k in range(len(pL)):
@@ -153,7 +162,25 @@ def main():
                            "{:<.6f}\n".format(p.mass, p.age, p.metallicityD['C'],
                            p.metallicityD['O'], p.metallicityD['Ca'], p.metallicityD['Cr'],
                            p.metallicityD['Mn'], p.metallicityD['Fe']))
-    elif(option == "out_gas_off"):
+    elif(option == "out_gas_matlab"):
+        array = np.zeros([nGrid,nGrid,nGrid],dtype=np.float64)
+        for p in pL:
+            if(p.type == 0):
+                i = int(p.posV[0] / header.boxSize * nGrid)
+                j = int(p.posV[1] / header.boxSize * nGrid)
+                k = int(p.posV[2] / header.boxSize * nGrid)
+                array[i,j,k] = array[i,j,k] + p.mass
+        # Sanity check, array summedhere should == array in 'plot'
+        # array = np.log(np.sum(array, axis=2))
+        # fig, ax = plt.subplots()
+        # im = ax.imshow(array)
+        # plt.show()
+        # 
+        outName = path.split("/")[-1]
+        outName = outName.split(".")[0]
+        outName = "{}_ngrid_{}_matlab_int.txt".format(nGrid,outName)
+        output_array_as_matlab_int(Array=array, OutName=outName)
+        
 
         
     

@@ -329,3 +329,51 @@ def read_metal(PL = None, Header=None, Symbol=None, FloatSize=4, ElemD=None,
     buf    = Fin.read(4)        # buffer
 
 
+
+
+def output_array_as_matlab_int(Array = None, OutName = None):
+    """
+    ARGS:
+        Density_array   :   Density array,
+        OutName         :   Output file name
+
+    DESCRIPTION:
+        Print out density array in the matlab int format.
+
+    RETURN:
+        N/A
+
+    DEBUG:
+        1. a) Output scaled [0, 255] value density_array (not scaling by z-axis!)
+              from JD01_B_comE_16hr.lsm-Ch2-C1matlab_int.txt
+           b) Output of Ray's JD01_B_comE_16hr.lsm-Ch2-C1float.vtk
+           c) The output's were _identical_ (compared with diff)
+           ---> I am correctly scaling the input data _and_ getting the x-y-z
+                format correct!
+
+        2. a) Output unscaled value density_array (not scaling by z-axis!)
+              from JD01_B_comE_16hr.lsm-Ch2-C1matlab_int.txt
+           b) Compared output to original file. Were IDENTICAL.
+           ---> I am correctly reading in the original data file.
+
+        CONCLUSION : output_array_as_matlab_int(),scale_array()
+                     and read_matlab_int_file() must all be working
+                     correctly, otherwise I would not have been able to
+                     get the correct output.
+    FUTURE:
+    """
+    data  = Array if Array is not None else exit_with_error("ERROR in Array!\n")
+    dim   = data.shape
+    fname = OutName if OutName is not None else exit_with_error("ERROR in OutName!\n")
+    fout  = open(fname, "w+")
+    fout.write("# vtk DataFile Version 1.0. next line is dim[]... Dx=change"
+               "column, Dy=each row, Dz=every dim[0] rows\n")
+    fout.write("%i %i %i\n"%(dim[0],dim[1],dim[2]))
+    for k in range(0, dim[2]):
+        for j in range(0, dim[1]):
+            for i in range(0, dim[0]):
+                fout.write("%i "%(data[i,j,k]))
+            fout.write("\n")
+    print("Finished outputting : %s"%(fname))
+
+
