@@ -19,5 +19,4 @@
 #. Follow my current Python convention, e.g. flag_Carbon -> flagC
 #. Create a function to print out the relative metallicities to compare with
    snapshot_016/mnc2file_gas.txt
-#. Put classes.py:read_metal() in functions.py
 #. Something is screwy with particle velocities
