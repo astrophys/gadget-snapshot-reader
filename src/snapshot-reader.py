@@ -163,6 +163,7 @@ def main():
                            p.metallicityD['O'], p.metallicityD['Ca'], p.metallicityD['Cr'],
                            p.metallicityD['Mn'], p.metallicityD['Fe']))
     elif(option == "out_gas_matlab"):
+        print("Outputting gas particles in a ({:}^3) array".format(nGrid))
         array = np.zeros([nGrid,nGrid,nGrid],dtype=np.float64)
         for p in pL:
             if(p.type == 0):
@@ -170,15 +171,26 @@ def main():
                 j = int(p.posV[1] / header.boxSize * nGrid)
                 k = int(p.posV[2] / header.boxSize * nGrid)
                 array[i,j,k] = array[i,j,k] + p.mass
-        # Sanity check, array summedhere should == array in 'plot'
-        # array = np.log(np.sum(array, axis=2))
+        #### Sanity check, array summedhere should == array in 'plot' ####
+        ## When using all particles, they agree (as they should)
+        # array = np.sum(array, axis=2)
+        # array = np.log(array)
         # fig, ax = plt.subplots()
-        # im = ax.imshow(array)
+        # im = ax.imshow(array[:,:,0])
         # plt.show()
-        # 
+        #array = np.log(array+1)
+        #### Plot histogram
+        # fig, ax = plt.subplots()
+        # (n, bins, drop) = ax.hist(np.ndarray.flatten(array), bins=30)
+        # plt.show()
+        #### Normalize so can be cast as int easily
+        minVal = np.min(array[array>0])
+        array  = (array/minVal).astype(int)
+
+
         outName = path.split("/")[-1]
         outName = outName.split(".")[0]
-        outName = "{}_ngrid_{}_matlab_int.txt".format(nGrid,outName)
+        outName = "{}_ngrid_{}_matlab_int.txt".format(outName,nGrid)
         output_array_as_matlab_int(Array=array, OutName=outName)
         
 

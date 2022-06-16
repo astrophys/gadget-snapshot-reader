@@ -1,4 +1,4 @@
-1. Look into arielle's machine /Users/ali/Research/code/mnc2file_sph to see if my headers match
+1. Look into arielle's machine ~/Research/code/mnc2file_sph to see if my headers match
 #. These files match (md5 = 854c4a38b3a70ca41dc7022bade600d0) : 
     a) phillips : ~/Research/data/GADGET_Data/cstar0.015/128/25Mpc/lcdm/snapshot_016/snapshot_016
     #) crc      : ~/Lab/phillips/pscratch/asnedden/128/25Mpc/lcdm/snapshot_016
@@ -14,9 +14,10 @@
     #) May 10, 2014, did correct io.c for R_Ia and R_II
 #. Add error checking with flags for sfr and typeII and typeIa SN
 #. Add pretty printing for particle class.
-#. Checked old compter mbp, no newer version 
 #. Add diagnostic printing
-#. Follow my current Python convention, e.g. flag_Carbon -> flagC
-#. Create a function to print out the relative metallicities to compare with
-   snapshot_016/mnc2file_gas.txt
 #. Something is screwy with particle velocities
+
+#. File output formats for tda code
+    a) Consider writing out voxel densities using ~/Code/C/Notre_Dame/ngb/src/main.c : W()
+    #) Consider adding ability to output as off file.
+
