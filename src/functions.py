@@ -40,7 +40,7 @@ def read_gadget2_snapshot(Path=None, Endian="little"):
 
     ########### Header ###########
     header = HEADER_V2(Bytes=headB, Endian="little")
-    header.print()
+    header.print_header()
     #physTime = get_phys_time_My(header)
     #print("physTime = {}".format(physTime))
     ngas   = header.npartV[0]
