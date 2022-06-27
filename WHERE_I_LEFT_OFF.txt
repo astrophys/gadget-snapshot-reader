@@ -21,3 +21,4 @@
     a) Consider writing out voxel densities using ~/Code/C/Notre_Dame/ngb/src/main.c : W()
     #) Consider adding ability to output as off file.
 
+#. Generate 3D plotter so I can explore snapshots
