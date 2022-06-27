@@ -4,3 +4,5 @@ data
 __pycache__
 a.out
 tmp-delete
+*_matlab_int.txt
+out_gas_matlab.txt
